@@ -213,3 +213,33 @@ extension ContentDirectory1VideoItem {
         return properties.description
     }
 }
+
+
+open class ContentDirectory1AudioItem: ContentDirectory1Item {
+    public let duration: TimeInterval?
+    public let protocolInfo: String?
+    
+    override init?(xmlElement: ONOXMLElement) {
+        if let durationString = xmlElement.firstChild(withTag: "res").value(forAttribute: "duration") as? String {
+            let durationComponents = durationString.components(separatedBy: ":")
+            var count: Double = 0
+            var duration: Double = 0
+            for durationComponent in durationComponents.reversed() {
+                duration += (durationComponent as NSString).doubleValue * pow(60, count)
+                count += 1
+            }
+
+            self.duration = TimeInterval(duration)
+        } else { self.duration = nil }
+        
+        protocolInfo = xmlElement.firstChild(withTag: "res").value(forAttribute: "protocolInfo") as? String
+        super.init(xmlElement: xmlElement)
+    }
+}
+
+extension ContentDirectory1Object {
+    public func isContentDirectory1AudioItem() -> Bool {
+        return self is ContentDirectory1AudioItem
+    }
+}
+

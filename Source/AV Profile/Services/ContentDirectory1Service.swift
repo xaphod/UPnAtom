@@ -351,19 +351,24 @@ class ContentDirectoryBrowseResultParser: AbstractDOMXMLParser {
             guard let element = element else{
                 return
             }
-//            NSLog("element \(element)")
+            NSLog("element \(element)")
             switch element.firstChild(withTag: "class").stringValue() {
             case .some(let rawType) where rawType.range(of: "object.container") != nil: // some servers use object.container and some use object.container.storageFolder
                 if let contentDirectoryObject = ContentDirectory1Container(xmlElement: element) {
                     self._contentDirectoryObjects.append(contentDirectoryObject)
                 }
-            case .some(let rawType) where rawType == "object.item.videoItem":
+            case .some(let rawType) where rawType.range(of: "object.item.videoItem") != nil:
                 if let contentDirectoryObject = ContentDirectory1VideoItem(xmlElement: element) {
+                    self._contentDirectoryObjects.append(contentDirectoryObject)
+                }
+            case .some(let rawType) where rawType.range(of: "object.item.audioItem") != nil:
+                if let contentDirectoryObject = ContentDirectory1AudioItem(xmlElement: element) {
                     self._contentDirectoryObjects.append(contentDirectoryObject)
                 }
             default:
                 if let contentDirectoryObject = ContentDirectory1Object(xmlElement: element) {
                     self._contentDirectoryObjects.append(contentDirectoryObject)
+                
                 }
             }
         }
