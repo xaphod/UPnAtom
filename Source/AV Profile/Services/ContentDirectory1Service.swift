@@ -24,41 +24,41 @@
 import Foundation
 import Ono
 
-public class ContentDirectory1Service: AbstractUPnPService {
-    public func getSearchCapabilities(success: (searchCapabilities: String?) -> Void, failure:(error: NSError) -> Void) {
+open class ContentDirectory1Service: AbstractUPnPService {
+    open func getSearchCapabilities(_ success: @escaping (_ searchCapabilities: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetSearchCapabilities", serviceURN: urn, arguments: nil)
         
-        soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+        soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
             let responseObject = responseObject as? [String: String]
-            success(searchCapabilities: responseObject?["SearchCaps"])
-            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                failure(error: error)
+            success(responseObject?["SearchCaps"])
+            }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                failure(error as NSError)
         })
     }
     
-    public func getSortCapabilities(success: (sortCapabilities: String?) -> Void, failure:(error: NSError) -> Void) {
+    open func getSortCapabilities(_ success: @escaping (_ sortCapabilities: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetSortCapabilities", serviceURN: urn, arguments: nil)
         
-        soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+        soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
             let responseObject = responseObject as? [String: String]
-            success(sortCapabilities: responseObject?["SortCaps"])
-            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                failure(error: error)
+            success(responseObject?["SortCaps"])
+            }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                failure(error as NSError)
         })
     }
     
-    public func getSystemUpdateID(success: (systemUpdateID: String?) -> Void, failure:(error: NSError) -> Void) {
+    open func getSystemUpdateID(_ success: @escaping (_ systemUpdateID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetSystemUpdateID", serviceURN: urn, arguments: nil)
         
-        soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+        soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
             let responseObject = responseObject as? [String: String]
-            success(systemUpdateID: responseObject?["Id"])
-            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                failure(error: error)
+            success(responseObject?["Id"])
+            }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                failure(error as NSError)
         })
     }
     
-    public func browse(objectID objectID: String, browseFlag: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: (result: [ContentDirectory1Object], numberReturned: Int, totalMatches: Int, updateID: String?) -> Void, failure: (error: NSError) -> Void) {
+    open func browse(objectID: String, browseFlag: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: @escaping (_ result: [ContentDirectory1Object], _ numberReturned: Int, _ totalMatches: Int, _ updateID: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ObjectID" : objectID,
             "BrowseFlag" : browseFlag,
@@ -69,26 +69,26 @@ public class ContentDirectory1Service: AbstractUPnPService {
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Browse", serviceURN: urn, arguments: arguments)
         
-        soapSessionManager.POST(controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
+        soapSessionManager.post(controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async(execute: { () -> Void in
                 let responseObject = responseObject as? [String: String]
                 
                 var result = [ContentDirectory1Object]()
                 if let resultString = responseObject?["Result"],
-                    parserResult = ContentDirectoryBrowseResultParser().parse(browseResultData: resultString.dataUsingEncoding(NSUTF8StringEncoding)!).value {
+                    let parserResult = ContentDirectoryBrowseResultParser().parse(browseResultData: resultString.data(using: String.Encoding.utf8)!).value {
                         result = parserResult
                 }
                 
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in                    
-                    success(result: result, numberReturned: Int(String(responseObject?["NumberReturned"])) ?? 0, totalMatches: Int(String(responseObject?["TotalMatches"])) ?? 0, updateID: responseObject?["UpdateID"])
+                DispatchQueue.main.async(execute: { () -> Void in                    
+                    success(result, Int(String(describing: responseObject?["NumberReturned"])) ?? 0, Int(String(describing: responseObject?["TotalMatches"])) ?? 0, responseObject?["UpdateID"])
                 })
             })
-            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                failure(error: error)
+            }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                failure(error as NSError)
         })
     }
     
-    public func search(containerID containerID: String, searchCriteria: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: (result: [ContentDirectory1Object], numberReturned: Int, totalMatches: Int, updateID: String?) -> Void, failure: (error: NSError) -> Void) {
+    open func search(containerID: String, searchCriteria: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: @escaping (_ result: [ContentDirectory1Object], _ numberReturned: Int, _ totalMatches: Int, _ updateID: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ContainerID" : containerID,
             "SearchCriteria" : searchCriteria,
@@ -102,30 +102,30 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "Search" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
+                    DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async(execute: { () -> Void in
                         let responseObject = responseObject as? [String: String]
                         
                         var result = [ContentDirectory1Object]()
                         if let resultString = responseObject?["Result"],
-                            parserResult = ContentDirectoryBrowseResultParser().parse(browseResultData: resultString.dataUsingEncoding(NSUTF8StringEncoding)!).value {
+                            let parserResult = ContentDirectoryBrowseResultParser().parse(browseResultData: resultString.data(using: String.Encoding.utf8)!).value {
                                 result = parserResult
                         }
                         
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            success(result: result, numberReturned: Int(String(responseObject?["NumberReturned"])) ?? 0, totalMatches: Int(String(responseObject?["TotalMatches"])) ?? 0, updateID: responseObject?["UpdateID"])
+                        DispatchQueue.main.async(execute: { () -> Void in
+                            success(result, Int(String(describing: responseObject?["NumberReturned"])) ?? 0, Int(String(describing: responseObject?["TotalMatches"])) ?? 0, responseObject?["UpdateID"])
                         })
                     })
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func createObject(containerID containerID: String, elements: String, success: (objectID: String?, result: [ContentDirectory1Object]) -> Void, failure: (error: NSError) -> Void) {
+    open func createObject(containerID: String, elements: String, success: @escaping (_ objectID: String?, _ result: [ContentDirectory1Object]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ContainerID" : containerID,
             "Elements" : elements]
@@ -135,30 +135,30 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "CreateObject" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
+                    DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async(execute: { () -> Void in
                         let responseObject = responseObject as? [String: String]
                         
                         var result = [ContentDirectory1Object]()
                         if let resultString = responseObject?["Result"],
-                            parserResult = ContentDirectoryBrowseResultParser().parse(browseResultData: resultString.dataUsingEncoding(NSUTF8StringEncoding)!).value {
+                            let parserResult = ContentDirectoryBrowseResultParser().parse(browseResultData: resultString.data(using: String.Encoding.utf8)!).value {
                                 result = parserResult
                         }
                         
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            success(objectID: responseObject?["ObjectID"], result: result)
+                        DispatchQueue.main.async(execute: { () -> Void in
+                            success(responseObject?["ObjectID"], result)
                         })
                     })
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func destroyObject(objectID objectID: String, success: () -> Void, failure:(error: NSError) -> Void) {
+    open func destroyObject(objectID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["ObjectID" : objectID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "DestroyObject", serviceURN: urn, arguments: arguments)
@@ -166,18 +166,18 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "DestroyObject" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
                     success()
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func updateObject(objectID objectID: String, currentTagValue: String, newTagValue: String, success: () -> Void, failure:(error: NSError) -> Void) {
+    open func updateObject(objectID: String, currentTagValue: String, newTagValue: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ObjectID" : objectID,
             "CurrentTagValue" : currentTagValue,
@@ -188,18 +188,18 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "UpdateObject" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
                     success()
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func importResource(sourceURI sourceURI: String, destinationURI: String, success: (transferID: String?) -> Void, failure:(error: NSError) -> Void) {
+    open func importResource(sourceURI: String, destinationURI: String, success: @escaping (_ transferID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "SourceURI" : sourceURI,
             "DestinationURI" : destinationURI]
@@ -209,19 +209,19 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "ImportResource" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
                     let responseObject = responseObject as? [String: String]
-                    success(transferID: responseObject?["TransferID"])
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    success(responseObject?["TransferID"])
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func exportResource(sourceURI sourceURI: String, destinationURI: String, success: (transferID: String?) -> Void, failure:(error: NSError) -> Void) {
+    open func exportResource(sourceURI: String, destinationURI: String, success: @escaping (_ transferID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "SourceURI" : sourceURI,
             "DestinationURI" : destinationURI]
@@ -231,19 +231,19 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "ExportResource" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
                     let responseObject = responseObject as? [String: String]
-                    success(transferID: responseObject?["TransferID"])
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    success(responseObject?["TransferID"])
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func stopTransferResource(transferID transferID: String, success: () -> Void, failure:(error: NSError) -> Void) {
+    open func stopTransferResource(transferID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["TransferID" : transferID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "StopTransferResource", serviceURN: urn, arguments: arguments)
@@ -251,18 +251,18 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "StopTransferResource" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
                     success()
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func getTransferProgress(transferID transferID: String, success: (transferStatus: String?, transferLength: String?, transferTotal: String?) -> Void, failure:(error: NSError) -> Void) {
+    open func getTransferProgress(transferID: String, success: @escaping (_ transferStatus: String?, _ transferLength: String?, _ transferTotal: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["TransferID" : transferID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetTransferProgress", serviceURN: urn, arguments: arguments)
@@ -270,19 +270,19 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "GetTransferProgress" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
                     let responseObject = responseObject as? [String: String]
-                    success(transferStatus: responseObject?["TransferStatus"], transferLength: responseObject?["TransferLength"], transferTotal: responseObject?["TransferTotal"])
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    success(responseObject?["TransferStatus"], responseObject?["TransferLength"], responseObject?["TransferTotal"])
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func deleteResource(resourceURI resourceURI: String, success: () -> Void, failure:(error: NSError) -> Void) {
+    open func deleteResource(resourceURI: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["ResourceURI" : resourceURI]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "DeleteResource", serviceURN: urn, arguments: arguments)
@@ -290,18 +290,18 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "DeleteResource" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
                     success()
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
     
-    public func createReference(containerID containerID: String, objectID: String, success: (newID: String?) -> Void, failure:(error: NSError) -> Void) {
+    open func createReference(containerID: String, objectID: String, success: @escaping (_ newID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ContainerID" : containerID,
             "ObjectID" : objectID]
@@ -311,14 +311,14 @@ public class ContentDirectory1Service: AbstractUPnPService {
         // Check if the optional SOAP action "CreateReference" is supported
         supportsSOAPAction(actionParameters: parameters) { (isSupported) -> Void in
             if isSupported {
-                self.soapSessionManager.POST(self.controlURL.absoluteString, parameters: parameters, success: { (task: NSURLSessionDataTask, responseObject: AnyObject?) -> Void in
+                self.soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
                     let responseObject = responseObject as? [String: String]
-                    success(newID: responseObject?["NewID"])
-                    }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
-                        failure(error: error)
+                    success(responseObject?["NewID"])
+                    }, failure: { (task: URLSessionDataTask?, error: Error) -> Void in
+                        failure(error as NSError)
                 })
             } else {
-                failure(error: createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(self.device?.friendlyName)"))
+                failure(createError("SOAP action '\(parameters.soapAction)' unsupported by service \(self.urn) on device \(String(describing: self.device?.friendlyName))") as NSError)
             }
         }
     }
@@ -333,8 +333,8 @@ extension AbstractUPnP {
 
 /// overrides ExtendedPrintable protocol implementation
 extension ContentDirectory1Service {
-    override public var className: String { return "\(self.dynamicType)" }
-    override public var description: String {
+    override public var className: String { return "\(type(of: self))" }
+    override open var description: String {
         var properties = PropertyPrinter()
         properties.add(super.className, property: super.description)
         return properties.description
@@ -342,18 +342,22 @@ extension ContentDirectory1Service {
 }
 
 class ContentDirectoryBrowseResultParser: AbstractDOMXMLParser {
-    private var _contentDirectoryObjects = [ContentDirectory1Object]()
+    fileprivate var _contentDirectoryObjects = [ContentDirectory1Object]()
     
-    override func parse(document document: ONOXMLDocument) -> EmptyResult {
-        let result: EmptyResult = .Success
+    override func parse(document: ONOXMLDocument) -> EmptyResult {
+        let result: EmptyResult = .success
         document.definePrefix("didllite", forDefaultNamespace: "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/")
-        document.enumerateElementsWithXPath("/didllite:DIDL-Lite/*", usingBlock: { [unowned self] (element: ONOXMLElement!, index: UInt, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
-            switch element.firstChildWithTag("class").stringValue() {
-            case .Some(let rawType) where rawType.rangeOfString("object.container") != nil: // some servers use object.container and some use object.container.storageFolder
+        document.enumerateElements(withXPath: "/didllite:DIDL-Lite/*") { [unowned self] (element, index, bool) in
+            guard let element = element else{
+                return
+            }
+//            NSLog("element \(element)")
+            switch element.firstChild(withTag: "class").stringValue() {
+            case .some(let rawType) where rawType.range(of: "object.container") != nil: // some servers use object.container and some use object.container.storageFolder
                 if let contentDirectoryObject = ContentDirectory1Container(xmlElement: element) {
                     self._contentDirectoryObjects.append(contentDirectoryObject)
                 }
-            case .Some(let rawType) where rawType == "object.item.videoItem":
+            case .some(let rawType) where rawType == "object.item.videoItem":
                 if let contentDirectoryObject = ContentDirectory1VideoItem(xmlElement: element) {
                     self._contentDirectoryObjects.append(contentDirectoryObject)
                 }
@@ -362,17 +366,17 @@ class ContentDirectoryBrowseResultParser: AbstractDOMXMLParser {
                     self._contentDirectoryObjects.append(contentDirectoryObject)
                 }
             }
-        })
+        }
         
         return result
     }
     
-    func parse(browseResultData browseResultData: NSData) -> Result<[ContentDirectory1Object]> {
+    func parse(browseResultData: Data) -> Result<[ContentDirectory1Object]> {
         switch super.parse(data: browseResultData) {
-        case .Success:
-            return .Success(_contentDirectoryObjects)
-        case .Failure(let error):
-            return .Failure(error)
+        case .success:
+            return .success(_contentDirectoryObjects)
+        case .failure(let error):
+            return .failure(error as NSError)
         }
     }
 }

@@ -49,11 +49,11 @@ enum SSDPType: RawRepresentable {
             self = .All
         } else if rawValue == "upnp:rootdevice" {
             self = .RootDevice
-        } else if rawValue.rangeOfString("uuid:") != nil {
+        } else if rawValue.range(of:"uuid:") != nil {
             self = .UUID(rawValue)
-        } else if rawValue.rangeOfString(":device:") != nil {
+        } else if rawValue.range(of:":device:") != nil {
             self = .Device(rawValue)
-        } else if rawValue.rangeOfString(":service:") != nil {
+        } else if rawValue.range(of:":service:") != nil {
             self = .Service(rawValue)
         } else {
             return nil
