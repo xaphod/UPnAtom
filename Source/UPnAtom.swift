@@ -69,6 +69,10 @@ open class UPnAtom: NSObject {
         ssdpDiscoveryAdapter.restart()
     }
     
+    open func resendSearchRequest() {
+        ssdpDiscoveryAdapter.resendSearch()
+    }
+    
     /// Override to use a different SSDP adapter if another SSDP system is preferred over CocoaSSDP
     class func ssdpDiscoveryAdapterClass() -> AbstractSSDPDiscoveryAdapter.Type {
         return SSDPExplorerDiscoveryAdapter.self

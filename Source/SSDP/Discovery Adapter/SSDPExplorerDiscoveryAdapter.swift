@@ -62,7 +62,9 @@ class SSDPExplorerDiscoveryAdapter: AbstractSSDPDiscoveryAdapter {
         
         super.stop()
     }
-    
+    override func resendSearch() {
+        _ssdpExplorer.searchRequest()
+    }
     fileprivate func notifyDelegate(ofFailure error: NSError) {
         delegateQueue.async(execute: { () -> Void in
             self.delegate?.ssdpDiscoveryAdapter(self, didFailWithError: error)

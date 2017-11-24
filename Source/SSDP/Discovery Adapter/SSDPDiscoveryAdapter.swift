@@ -35,6 +35,8 @@ protocol SSDPDiscoveryAdapter: class {
     func start()
     func stop()
     func restart()
+    func resendSearch()
+
 }
 
 /// An abstract class to allow any SSDP library to be used an adapted into UPnAtom for SSDP discovery.
@@ -66,6 +68,9 @@ class AbstractSSDPDiscoveryAdapter: SSDPDiscoveryAdapter {
     /// Sets running = false.
     func failed🔰() {
         running = false
+    }
+    
+    func resendSearch() {
     }
 }
 
