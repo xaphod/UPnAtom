@@ -113,8 +113,7 @@ class SSDPExplorer {
         if let unicastSocket = _unicastSocket {
             for type in _types {
                 if let data = self.searchRequestData(forType: type) {
-                    //                println(">>>> SENDING SEARCH REQUEST\n\(NSString(data: data, encoding: NSUTF8StringEncoding))")
-                    unicastSocket?.send(data, toHost: SSDPExplorer._multicastGroupAddress, port: SSDPExplorer._multicastUDPPort, withTimeout: -1, tag: type.hashValue)
+                    unicastSocket.send(data, toHost: SSDPExplorer._multicastGroupAddress, port: SSDPExplorer._multicastUDPPort, withTimeout: -1, tag: type.hashValue)
                 }
             }
         }

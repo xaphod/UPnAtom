@@ -259,6 +259,15 @@ extension AbstractUPnPService: UPnPEventSubscriber {
             }
         })
     }
+    public func removeAllEventObserver() {
+        for observer in self._eventObservers.reversed() {
+            let _ = self._eventObservers.removeObject(observer)
+            NotificationCenter.default.removeObserver(observer.notificationCenterObserver)
+        }
+        
+        
+    }
+
     
     func handleEvent(_ eventSubscriptionManager: UPnPEventSubscriptionManager, eventXML: Data) {
         NotificationCenter.default.post(name: Notification.Name(rawValue: UPnPEventReceivedNotification()), object: nil, userInfo: [AbstractUPnPService._upnpEventKey: self.createEvent(eventXML)])
