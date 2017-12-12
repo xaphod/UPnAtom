@@ -1,49 +1,31 @@
 //
-//  AVTransport1Event.swift
+//  RenderingControl1Event.swift
+//  AFNetworking
 //
-//  Copyright (c) 2015 David Robles
+//  Created by 허행 on 2017. 12. 12..
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in all
-//  copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//  SOFTWARE.
-
 
 import Ono
 
-open class AVTransport1Event: UPnPEvent {
+open class RenderingControl1Event: UPnPEvent {
     open var instanceState = [String: AnyObject]()
     
     override public init(eventXML: Data, service: AbstractUPnPService) {
         super.init(eventXML: eventXML, service: service)
         
-        if let parsedInstanceState = AVTransport1EventParser().parse(eventXML: eventXML).value {
+        if let parsedInstanceState = RenderingControl1EventParser().parse(eventXML: eventXML).value {
             instanceState = parsedInstanceState
         }
     }
-}
 
-/// for objective-c type checking
+}
 extension UPnPEvent {
-    public func isAVTransport1Event() -> Bool {
-        return self is AVTransport1Event
+    public func isRenderingControl1Event() -> Bool {
+        return self is RenderingControl1Event
     }
 }
 
-class AVTransport1EventParser: AbstractDOMXMLParser {
+class RenderingControl1EventParser: AbstractDOMXMLParser {
     fileprivate var _instanceState = [String: AnyObject]()
     
     override func parse(document: ONOXMLDocument) -> EmptyResult {
@@ -60,7 +42,7 @@ class AVTransport1EventParser: AbstractDOMXMLParser {
             return .failure(createError("Unable to parse LastChange XML"))
         }
         
-        lastChangeEventDocument.definePrefix("avt", forDefaultNamespace: "urn:schemas-upnp-org:metadata-1-0/AVT/")
+        lastChangeEventDocument.definePrefix("rcs", forDefaultNamespace: "urn:schemas-upnp-org:metadata-1-0/RCS/")
         lastChangeEventDocument.enumerateElements(withXPath: "/avt:Event/avt:InstanceID/*") { [unowned self] (element, index, bool) in
             guard let element = element else{
                 return
@@ -83,14 +65,14 @@ class AVTransport1EventParser: AbstractDOMXMLParser {
                         if let elementStringValue = metadataElement.stringValue(), !elementStringValue.isEmpty {
                             metaData[metadataElement.tag] = elementStringValue
                         }
-                    } 
+                    }
                     
                     self._instanceState[element.tag] = metaData as AnyObject
                 } else {
                     self._instanceState[element.tag] = stateValue as AnyObject
                 }
             }
-            }
+        }
         
         return result
     }
@@ -104,4 +86,3 @@ class AVTransport1EventParser: AbstractDOMXMLParser {
         }
     }
 }
-

@@ -324,6 +324,9 @@ open class RenderingControl1Service: AbstractUPnPService {
             performAction()
         }
     }
+    override open func createEvent(_ eventXML: Data) -> UPnPEvent {
+        return RenderingControl1Event(eventXML: eventXML, service: self)
+    }
 }
 
 /// for objective-c type checking

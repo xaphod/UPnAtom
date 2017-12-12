@@ -115,10 +115,10 @@ class UPnPEventSubscriptionManager {
         _unsubscribeSessionManager.requestSerializer = UPnPEventUnsubscribeRequestSerializer()
         _unsubscribeSessionManager.responseSerializer = UPnPEventUnsubscribeResponseSerializer()
         
-        #if os(iOS)
-            NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationDidEnterBackground(_:)), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        #endif
+//        #if os(iOS)
+//            NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationDidEnterBackground(_:)), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+//            NotificationCenter.default.addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+//        #endif
         
         /// GCDWebServer must be initialized on the main thread. In order to guarantee this, it's initialization is dispatched on the main queue. To prevent critical sections from accessing it before it is initialized, the dispatch is synchronized within a dispatch barrier to the subscription manager's critical section queue.
         _concurrentSubscriptionQueue.async(flags: .barrier, execute: { () -> Void in
@@ -450,11 +450,13 @@ class UPnPEventSubscriptionManager {
     }
     
     fileprivate func startHTTPServer() -> Bool {
-        if _httpServer.safeToStart {
-            return _httpServer.start(withPort: _httpServerPort, bonjourName: nil)
+        let options = [GCDWebServerOption_Port: _httpServerPort, GCDWebServerOption_AutomaticallySuspendInBackground:UInt(false)]
+        if let _ = try? _httpServer.start(options: options) {
+            NSLog("port \(_httpServer.port)")
+            return true
+        } else {
+            return false;
         }
-        
-        return false
     }
     
     fileprivate func stopHTTPServer() -> Bool {

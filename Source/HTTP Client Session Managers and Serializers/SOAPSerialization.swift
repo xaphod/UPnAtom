@@ -55,8 +55,9 @@ open class SOAPRequestSerializer: AFHTTPRequestSerializer {
         }
         
         if mutableRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-            let charSet = CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(String.Encoding.utf8.rawValue))
-            mutableRequest.setValue("text/xml; charset=\"\(String(describing: charSet))\"", forHTTPHeaderField: "Content-Type")
+            if let charSet = CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(String.Encoding.utf8.rawValue)) {
+                mutableRequest.setValue("text/xml; charset=\"\(charSet)\"", forHTTPHeaderField: "Content-Type")
+            }
         }
         
         mutableRequest.setValue("\"\(requestParameters.serviceURN)#\(requestParameters.soapAction)\"", forHTTPHeaderField: "SOAPACTION")
