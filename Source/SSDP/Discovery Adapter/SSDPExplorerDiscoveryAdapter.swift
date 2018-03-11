@@ -56,16 +56,27 @@ class SSDPExplorerDiscoveryAdapter: AbstractSSDPDiscoveryAdapter {
         
         _serialSSDPDiscoveryQueue.async(execute: { () -> Void in
             self._ssdpDiscoveries.removeAll(keepingCapacity: false)
-            
             self.notifyDelegate(ofDiscoveries: Array(self._ssdpDiscoveries.values))
         })
         
         super.stop()
     }
+    
     override func resendSearch() {
-        _ssdpExplorer.stopExploring()
-        super.stop()
-        start()
+        _ssdpExplorer.searchRequest()
+//        _ssdpExplorer.stopExploring()
+//        _serialSSDPDiscoveryQueue.async(execute: { () -> Void in
+//            self.notifyDelegate(ofDiscoveries: Array(self._ssdpDiscoveries.values))
+//        })
+//
+//        super.stop()
+//        start()
+    }
+    
+    override func failed🔰() {
+        super.failed🔰()
+        self.stop()
+        
     }
     fileprivate func notifyDelegate(ofFailure error: NSError) {
         delegateQueue.async(execute: { () -> Void in

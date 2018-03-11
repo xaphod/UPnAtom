@@ -51,6 +51,12 @@ class SSDPExplorer {
     fileprivate var _types = [SSDPType]() // TODO: Should ideally be a Set<SSDPType>, see Github issue #13
     
     func startExploring(forTypes types: [SSDPType], onInterface interface: String = "en0") -> EmptyResult {
+        
+        if (_multicastSocket != nil || _unicastSocket != nil) {
+            stopExploring()
+            _multicastSocket = nil;
+            _unicastSocket = nil;
+        }
         assert(_multicastSocket == nil, "Socket is already open, stop it first!")
         
         // create sockets
@@ -82,12 +88,18 @@ class SSDPExplorer {
         
         // Configure multicast socket
         // Bind to port without defining the interface to bind to the address INADDR_ANY (0.0.0.0). This prevents any address filtering which allows datagrams sent to the multicast group to be receives
+        
         do {
             try multicastSocket?.bind(toPort: SSDPExplorer._multicastUDPPort)
         } catch {
-            stopExploring()
-            return .failure(createError("Could not bind socket to multicast port"))
+            do {
+                try multicastSocket?.bind(toPort: SSDPExplorer._multicastUDPPort)
+            } catch {
+                stopExploring()
+                return .failure(createError("Could not bind socket to multicast port"))
+            }
         }
+
         
         // Join multicast group to express interest to router of receiving multicast datagrams
         do {
@@ -110,6 +122,13 @@ class SSDPExplorer {
     }
     
     func searchRequest() {
+        if let multicastSocket = _multicastSocket {
+            for type in _types {
+                if let data = self.searchRequestData(forType: type) {
+                    multicastSocket.send(data, toHost: SSDPExplorer._multicastGroupAddress, port: SSDPExplorer._multicastUDPPort, withTimeout: -1, tag: type.hashValue)
+                }
+            }
+        }
         if let unicastSocket = _unicastSocket {
             for type in _types {
                 if let data = self.searchRequestData(forType: type) {
@@ -117,7 +136,6 @@ class SSDPExplorer {
                 }
             }
         }
-
     }
     
     func stopExploring() {
@@ -134,7 +152,7 @@ class SSDPExplorer {
             "Host: \(SSDPExplorer._multicastGroupAddress):\(SSDPExplorer._multicastUDPPort)",
             "Man: \"ssdp:discover\"",
             "St: \(type.rawValue)",
-            "MX: 5"]
+            "MX: 15"]
         
         if let userAgent = AFHTTPRequestSerializer().value(forHTTPHeaderField: "User-Agent") {
             requestBody += ["User-Agent: \(userAgent)\r\n\r\n\r\n"]
@@ -168,7 +186,12 @@ class SSDPExplorer {
             /// ST = Search Target - SSDP discovered as a result of using M-SEARCH requests
             let ssdpTypeRawValue = (headers["st"] != nil ? headers["st"] : headers["nt"]),
             let ssdpType = SSDPType(rawValue: ssdpTypeRawValue), _types.index(of: ssdpType) != nil {
-                LogVerbose("SSDP response headers: \(headers)")
+            
+            if ssdpTypeRawValue.contains("MediaRenderer:1") {
+//                NSLog("SSDP messageType \(messageType) response headers: \(headers)")
+            }
+
+//                LogVerbose("SSDP response headers: \(headers)")
                 let discovery = SSDPDiscovery(usn: usn, descriptionURL: locationURL, type: ssdpType)
                 switch messageType {
                 case .searchResponse, .availableNotification, .updateNotification:
@@ -213,6 +236,7 @@ extension SSDPExplorer: GCDAsyncUdpSocketDelegate {
             var httpMethodLine: String?
             var headers = [String: String]()
             let headersRegularExpression = try? NSRegularExpression(pattern: "^([a-z0-9-]+): *(.+)$", options: [.caseInsensitive, .anchorsMatchLines])
+            
             message.enumerateLines(invoking: { (line, stop) -> () in
                 if httpMethodLine == nil {
                     httpMethodLine = line
@@ -246,3 +270,13 @@ extension SSDPExplorer: GCDAsyncUdpSocketDelegate {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+

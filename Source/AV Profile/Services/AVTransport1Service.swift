@@ -83,7 +83,7 @@ open class AVTransport1Service: AbstractUPnPService {
         let arguments = ["InstanceID" : instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetTransportInfo", serviceURN: urn, arguments: arguments)
-        
+        soapSessionManager.requestSerializer.timeoutInterval = 5
         soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
             let responseObject = responseObject as? [String: String]
             success(responseObject?["CurrentTransportState"], responseObject?["CurrentTransportStatus"], responseObject?["CurrentSpeed"])

@@ -93,7 +93,7 @@ open class ConnectionManager1Service: AbstractUPnPService {
         let arguments = ["ConnectionID" : connectionID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetCurrentConnectionInfo", serviceURN: urn, arguments: arguments)
-        
+        soapSessionManager.requestSerializer.timeoutInterval = 5;
         soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
             let responseObject = responseObject as? [String: String]
             success(responseObject?["RcsID"], responseObject?["AVTransportID"], responseObject?["ProtocolInfo"], responseObject?["PeerConnectionManager"], responseObject?["PeerConnectionID"], responseObject?["Direction"], responseObject?["Status"])

@@ -43,7 +43,7 @@ class RenderingControl1EventParser: AbstractDOMXMLParser {
         }
         
         lastChangeEventDocument.definePrefix("rcs", forDefaultNamespace: "urn:schemas-upnp-org:metadata-1-0/RCS/")
-        lastChangeEventDocument.enumerateElements(withXPath: "/avt:Event/avt:InstanceID/*") { [unowned self] (element, index, bool) in
+        lastChangeEventDocument.enumerateElements(withXPath: "/rcs:Event/rcs:InstanceID/*") { [unowned self] (element, index, bool) in
             guard let element = element else{
                 return
             }
