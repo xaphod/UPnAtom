@@ -295,27 +295,30 @@ class UPnPEventSubscriptionManager {
     fileprivate func eventCallBackURL(_ closure: @escaping (_ eventCallBackURL: URL?) -> Void) {
         // only reading subscriptions, so distpach_async is appropriate to allow for concurrent reads
         self._concurrentSubscriptionQueue.async(execute: { () -> Void in
+            
+            DispatchQueue.main.async {
             // needs to be running in order to get server url for the subscription message
-            let httpServer = self._httpServer
-            var serverURL: URL? = httpServer?.serverURL
-            
-            // most likely nil if the http server is stopped
-            if serverURL == nil && !(httpServer?.isRunning)! {
-                // Start http server
-                if self.startHTTPServer() {
-                    // Grab server url
-                    serverURL = httpServer?.serverURL
-                    
-                    // Stop http server if it's not needed further
-                    self.startStopHTTPServerIfNeeded(self._subscriptions.count)
-                } else {
-                    LogError("Error starting HTTP server")
+                let httpServer = self._httpServer
+                var serverURL: URL? = httpServer?.serverURL
+                
+                // most likely nil if the http server is stopped
+                if serverURL == nil && !(httpServer?.isRunning)! {
+                    // Start http server
+                    if self.startHTTPServer() {
+                        // Grab server url
+                        serverURL = httpServer?.serverURL
+                        
+                        // Stop http server if it's not needed further
+                        self.startStopHTTPServerIfNeeded(self._subscriptions.count)
+                    } else {
+                        LogError("Error starting HTTP server")
+                    }
                 }
+                
+                DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async(execute: { () -> Void in
+                    serverURL != nil ? closure(URL(string: self._eventCallBackPath, relativeTo: serverURL)!) : closure(nil)
+                })
             }
-            
-            DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async(execute: { () -> Void in
-                serverURL != nil ? closure(URL(string: self._eventCallBackPath, relativeTo: serverURL)!) : closure(nil)
-            })
         })
     }
     

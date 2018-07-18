@@ -60,12 +60,12 @@ open class ContentDirectory1Service: AbstractUPnPService {
     
     open func browse(objectID: String, browseFlag: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: @escaping (_ result: [ContentDirectory1Object], _ numberReturned: Int, _ totalMatches: Int, _ updateID: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "ObjectID" : objectID,
-            "BrowseFlag" : browseFlag,
-            "Filter": filter,
-            "StartingIndex" : startingIndex,
-            "RequestedCount" : requestedCount,
-            "SortCriteria" : sortCriteria]
+            "ObjectID",objectID,
+            "BrowseFlag",browseFlag,
+            "Filter", filter,
+            "StartingIndex",startingIndex,
+            "RequestedCount",requestedCount,
+            "SortCriteria",sortCriteria]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Browse", serviceURN: urn, arguments: arguments)
         
@@ -90,12 +90,12 @@ open class ContentDirectory1Service: AbstractUPnPService {
     
     open func search(containerID: String, searchCriteria: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: @escaping (_ result: [ContentDirectory1Object], _ numberReturned: Int, _ totalMatches: Int, _ updateID: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "ContainerID" : containerID,
-            "SearchCriteria" : searchCriteria,
-            "Filter": filter,
-            "StartingIndex" : startingIndex,
-            "RequestedCount" : requestedCount,
-            "SortCriteria" : sortCriteria]
+            "ContainerID",containerID,
+            "SearchCriteria",searchCriteria,
+            "Filter", filter,
+            "StartingIndex",startingIndex,
+            "RequestedCount",requestedCount,
+            "SortCriteria",sortCriteria]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Search", serviceURN: urn, arguments: arguments)
         
@@ -127,8 +127,8 @@ open class ContentDirectory1Service: AbstractUPnPService {
     
     open func createObject(containerID: String, elements: String, success: @escaping (_ objectID: String?, _ result: [ContentDirectory1Object]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "ContainerID" : containerID,
-            "Elements" : elements]
+            "ContainerID",containerID,
+            "Elements",elements]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "CreateObject", serviceURN: urn, arguments: arguments)
         
@@ -159,7 +159,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
     }
     
     open func destroyObject(objectID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        let arguments = ["ObjectID" : objectID]
+        let arguments = ["ObjectID",objectID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "DestroyObject", serviceURN: urn, arguments: arguments)
         
@@ -179,9 +179,9 @@ open class ContentDirectory1Service: AbstractUPnPService {
     
     open func updateObject(objectID: String, currentTagValue: String, newTagValue: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "ObjectID" : objectID,
-            "CurrentTagValue" : currentTagValue,
-            "NewTagValue" : newTagValue]
+            "ObjectID",objectID,
+            "CurrentTagValue",currentTagValue,
+            "NewTagValue",newTagValue]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "UpdateObject", serviceURN: urn, arguments: arguments)
         
@@ -201,8 +201,8 @@ open class ContentDirectory1Service: AbstractUPnPService {
     
     open func importResource(sourceURI: String, destinationURI: String, success: @escaping (_ transferID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "SourceURI" : sourceURI,
-            "DestinationURI" : destinationURI]
+            "SourceURI",sourceURI,
+            "DestinationURI",destinationURI]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "ImportResource", serviceURN: urn, arguments: arguments)
         
@@ -223,8 +223,8 @@ open class ContentDirectory1Service: AbstractUPnPService {
     
     open func exportResource(sourceURI: String, destinationURI: String, success: @escaping (_ transferID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "SourceURI" : sourceURI,
-            "DestinationURI" : destinationURI]
+            "SourceURI",sourceURI,
+            "DestinationURI",destinationURI]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "ExportResource", serviceURN: urn, arguments: arguments)
         
@@ -244,7 +244,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
     }
     
     open func stopTransferResource(transferID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        let arguments = ["TransferID" : transferID]
+        let arguments = ["TransferID",transferID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "StopTransferResource", serviceURN: urn, arguments: arguments)
         
@@ -263,7 +263,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
     }
     
     open func getTransferProgress(transferID: String, success: @escaping (_ transferStatus: String?, _ transferLength: String?, _ transferTotal: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        let arguments = ["TransferID" : transferID]
+        let arguments = ["TransferID",transferID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetTransferProgress", serviceURN: urn, arguments: arguments)
         
@@ -283,7 +283,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
     }
     
     open func deleteResource(resourceURI: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        let arguments = ["ResourceURI" : resourceURI]
+        let arguments = ["ResourceURI",resourceURI]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "DeleteResource", serviceURN: urn, arguments: arguments)
         
@@ -303,8 +303,8 @@ open class ContentDirectory1Service: AbstractUPnPService {
     
     open func createReference(containerID: String, objectID: String, success: @escaping (_ newID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "ContainerID" : containerID,
-            "ObjectID" : objectID]
+            "ContainerID",containerID,
+            "ObjectID",objectID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "CreateReference", serviceURN: urn, arguments: arguments)
         

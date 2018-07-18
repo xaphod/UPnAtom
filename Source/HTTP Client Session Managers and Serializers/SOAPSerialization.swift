@@ -32,9 +32,9 @@ open class SOAPRequestSerializer: AFHTTPRequestSerializer {
     open class Parameters {
         let soapAction: String
         let serviceURN: String
-        let arguments: [String: String]?
+        let arguments: [String]?
         
-        public init(soapAction: String, serviceURN: String, arguments: [String: String]?) {
+        public init(soapAction: String, serviceURN: String, arguments: [String]?) {
             self.soapAction = soapAction
             self.serviceURN = serviceURN
             self.arguments = arguments
@@ -67,9 +67,16 @@ open class SOAPRequestSerializer: AFHTTPRequestSerializer {
         body += "<s:Body>"
         body += "<u:\(requestParameters.soapAction) xmlns:u=\"\(requestParameters.serviceURN)\">"
         if let arguments = requestParameters.arguments {
-            for (key, value) in arguments {
-                body += "<\(key)>\(value)</\(key)>"
+            let argumentsArray = stride(from: 0, to: arguments.count, by: 2).map {
+                Array(arguments[$0..<Swift.min($0 + 2, arguments.count)])
             }
+            
+            for argument in argumentsArray {
+                body += "<\(argument[0])>\(argument[1])</\(argument[0])>"
+            }
+//            for (key, value) in arguments {
+//                body += "<\(key)>\(value)</\(key)>"
+//            }
         }
         body += "</u:\(requestParameters.soapAction)>"
         body += "</s:Body></s:Envelope>"

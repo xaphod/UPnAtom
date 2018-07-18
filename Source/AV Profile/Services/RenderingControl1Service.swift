@@ -25,7 +25,7 @@ import Foundation
 
 open class RenderingControl1Service: AbstractUPnPService {
     open func listPresets(instanceID: String, success: @escaping (_ presetNameList: [String]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
-        let arguments = ["InstanceID" : instanceID]
+        let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "ListPresets", serviceURN: urn, arguments: arguments)
         
@@ -39,8 +39,8 @@ open class RenderingControl1Service: AbstractUPnPService {
     
     open func selectPreset(instanceID: String, presetName: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "InstanceID" : instanceID,
-            "PresetName" : presetName]
+            "InstanceID",instanceID,
+            "PresetName",presetName]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "SelectPreset", serviceURN: urn, arguments: arguments)
         
@@ -172,29 +172,29 @@ open class RenderingControl1Service: AbstractUPnPService {
     }
     
     open func getMute(instanceID: String, channel: String = "Master", success: @escaping (_ mute: Bool) -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        getStateVariable(instanceID: instanceID, stateVariableName: "Mute", additionalArguments: ["Channel" : channel], isOptional: false, success: { (stateVariableValue: String?) -> Void in
+        getStateVariable(instanceID: instanceID, stateVariableName: "Mute", additionalArguments: ["Channel",channel], isOptional: false, success: { (stateVariableValue: String?) -> Void in
             success((stateVariableValue ?? "0") == "0" ? false : true)
         }, failure: failure)
     }
     
     open func setMute(instanceID: String, mute: Bool, channel: String = "Master", success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        setStateVariable(instanceID: instanceID, stateVariableName: "Mute", stateVariableValue: mute ? "1" : "0", additionalArguments: ["Channel" : channel], isOptional: false, success: success, failure: failure)
+        setStateVariable(instanceID: instanceID, stateVariableName: "Mute", stateVariableValue: mute ? "1" : "0", additionalArguments: ["Channel",channel], isOptional: false, success: success, failure: failure)
     }
     
     open func getVolume(instanceID: String, channel: String = "Master", success: @escaping (_ volume: Int) -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        getStateVariable(instanceID: instanceID, stateVariableName: "Volume", additionalArguments: ["Channel" : channel], success: { (stateVariableValue: String?) -> Void in
+        getStateVariable(instanceID: instanceID, stateVariableName: "Volume", additionalArguments: ["Channel",channel], success: { (stateVariableValue: String?) -> Void in
             success(Int(String(describing: stateVariableValue)) ?? 0)
         }, failure: failure)
     }
     
     open func setVolume(instanceID: String, volume: Int, channel: String = "Master", success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        setStateVariable(instanceID: instanceID, stateVariableName: "Volume", stateVariableValue: "\(volume)", additionalArguments: ["Channel" : channel], success: success, failure: failure)
+        setStateVariable(instanceID: instanceID, stateVariableName: "Volume", stateVariableValue: "\(volume)", additionalArguments: ["Channel",channel], success: success, failure: failure)
     }
     
     open func getVolumeDB(instanceID: String, channel: String = "Master", success: @escaping (_ volumeDB: Int) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "InstanceID" : instanceID,
-            "Channel" : channel]
+            "InstanceID",instanceID,
+            "Channel",channel]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetVolumeDB", serviceURN: urn, arguments: arguments)
         
@@ -215,9 +215,9 @@ open class RenderingControl1Service: AbstractUPnPService {
     
     open func setVolumeDB(instanceID: String, volumeDB: Int, channel: String = "Master", success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "InstanceID" : instanceID,
-            "Channel" : channel,
-            "DesiredVolume" : "\(volumeDB)"]
+            "InstanceID",instanceID,
+            "Channel",channel,
+            "DesiredVolume","\(volumeDB)"]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "SetVolumeDB", serviceURN: urn, arguments: arguments)
         
@@ -237,8 +237,8 @@ open class RenderingControl1Service: AbstractUPnPService {
     
     open func getVolumeDBRange(instanceID: String, channel: String = "Master", success: @escaping (_ minimumValue: Int, _ maximumValue: Int) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "InstanceID" : instanceID,
-            "Channel" : channel]
+            "InstanceID",instanceID,
+            "Channel",channel]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetVolumeDBRange", serviceURN: urn, arguments: arguments)
         
@@ -258,17 +258,17 @@ open class RenderingControl1Service: AbstractUPnPService {
     }
     
     open func getLoudness(instanceID: String, channel: String = "Master", success: @escaping (_ loudness: Bool) -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        getStateVariable(instanceID: instanceID, stateVariableName: "Loudness", additionalArguments: ["Channel" : channel], isOptional: false, success: { (stateVariableValue: String?) -> Void in
+        getStateVariable(instanceID: instanceID, stateVariableName: "Loudness", additionalArguments: ["Channel",channel], isOptional: false, success: { (stateVariableValue: String?) -> Void in
             success((stateVariableValue ?? "0") == "0" ? false : true)
         }, failure: failure)
     }
     
     open func setLoudness(instanceID: String, loudness: Bool, channel: String = "Master", success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        setStateVariable(instanceID: instanceID, stateVariableName: "Loudness", stateVariableValue: loudness ? "1" : "0", additionalArguments: ["Channel" : channel], isOptional: false, success: success, failure: failure)
+        setStateVariable(instanceID: instanceID, stateVariableName: "Loudness", stateVariableValue: loudness ? "1" : "0", additionalArguments: ["Channel",channel], isOptional: false, success: success, failure: failure)
     }
     
-    fileprivate func getStateVariable(instanceID: String, stateVariableName: String, additionalArguments: [String: String] = [String: String](), isOptional: Bool = true, success: @escaping (_ stateVariableValue: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
-        let arguments = ["InstanceID" : instanceID] + additionalArguments
+    fileprivate func getStateVariable(instanceID: String, stateVariableName: String, additionalArguments: [String] = [String](), isOptional: Bool = true, success: @escaping (_ stateVariableValue: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+        let arguments = ["InstanceID",instanceID] + additionalArguments
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Get\(stateVariableName)", serviceURN: urn, arguments: arguments)
         
@@ -295,11 +295,11 @@ open class RenderingControl1Service: AbstractUPnPService {
         }
     }
     
-    fileprivate func setStateVariable(instanceID: String, stateVariableName: String, stateVariableValue: String, additionalArguments: [String: String] = [String: String](), isOptional: Bool = true, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    fileprivate func setStateVariable(instanceID: String, stateVariableName: String, stateVariableValue: String, additionalArguments: [String] = [String](), isOptional: Bool = true, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
-            "InstanceID" : instanceID,
-            "Desired\(stateVariableName)" : stateVariableValue] +
-        additionalArguments
+            "InstanceID",instanceID] + additionalArguments +
+            ["Desired\(stateVariableName)",stateVariableValue]
+        
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Set\(stateVariableName)", serviceURN: urn, arguments: arguments)
         
