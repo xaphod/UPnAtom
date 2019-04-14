@@ -1,14 +1,14 @@
 Pod::Spec.new do |s|
   s.name         = 'UPnAtom'
-  s.version      = '0.7.1'
+  s.version      = '0.7.2'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.summary      = 'An open source Universal Plug and Play library with a focus on media streaming coordination using the UPnP A/V profile.'
   s.homepage     = 'https://github.com/master-nevi/UPnAtom'
   s.authors      = { 'David Robles' => 'master-nevi@users.noreply.github.com' }
   s.source       = { :git => 'https://github.com/master-nevi/UPnAtom.git', :tag => s.version.to_s }
   s.requires_arc = true
-  s.ios.deployment_target = '8.0'
-  s.osx.deployment_target = '10.9'
+  s.ios.deployment_target = '9.0'
+  s.osx.deployment_target = '10.11'
 
   s.source_files = 'Source/**/*.swift'
   s.exclude_files = 'Source/CocoaSSDP Support/*.swift'
