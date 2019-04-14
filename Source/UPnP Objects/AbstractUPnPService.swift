@@ -25,34 +25,34 @@ import Foundation
 import Ono
 import AFNetworking
 
-open class AbstractUPnPService: AbstractUPnP {
+public class AbstractUPnPService: AbstractUPnP {
     // public
-    open var serviceType: String {
+    public var serviceType: String {
         return urn
     }
-    open fileprivate(set) var serviceID: String! // TODO: Should ideally be a constant, see Github issue #10
-    open var serviceDescriptionURL: URL {
+    public fileprivate(set) var serviceID: String! // TODO: Should ideally be a constant, see Github issue #10
+    public var serviceDescriptionURL: URL {
         return URL(string: _relativeServiceDescriptionURL.absoluteString, relativeTo: baseURL)!
     }
-    open var controlURL: URL {
+    public var controlURL: URL {
         return URL(string: _relativeControlURL.absoluteString, relativeTo: baseURL)!
     }
-    open var eventURL: URL {
+    public var eventURL: URL {
         return URL(string: _relativeEventURL.absoluteString, relativeTo: baseURL)!
     }
-    override open var baseURL: URL! {
+    override public var baseURL: URL! {
         if let baseURL = _baseURLFromXML {
             return baseURL
         }
         return super.baseURL as URL!
     }
-    open weak var deviceSource: UPnPDeviceSource?
-    open var device: AbstractUPnPDevice? {
+    public weak var deviceSource: UPnPDeviceSource?
+    public var device: AbstractUPnPDevice? {
         return deviceSource?.device(forUSN: _deviceUSN)
     }
     
     /// protected
-    open fileprivate(set) var soapSessionManager: SOAPSessionManager! // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var soapSessionManager: SOAPSessionManager! // TODO: Should ideally be a constant, see Github issue #10
     
     // private
     fileprivate var _baseURLFromXML: URL? // TODO: Should ideally be a constant, see Github issue #10
@@ -117,7 +117,7 @@ open class AbstractUPnPService: AbstractUPnP {
     }
     
     /// The service description document can be used for querying for service specific support i.e. SOAP action arguments
-    open func serviceDescriptionDocument(_ completion: @escaping (_ serviceDescriptionDocument: ONOXMLDocument?, _ defaultPrefix: String) -> Void) {
+    public func serviceDescriptionDocument(_ completion: @escaping (_ serviceDescriptionDocument: ONOXMLDocument?, _ defaultPrefix: String) -> Void) {
         if let serviceDescriptionDocument = _serviceDescriptionDocument {
             completion(serviceDescriptionDocument, AbstractUPnPService._serviceDescriptionDefaultPrefix)
         } else {
@@ -151,7 +151,7 @@ open class AbstractUPnPService: AbstractUPnP {
     }
     
     /// Used for determining support of optional SOAP actions for this service.
-    open func supportsSOAPAction(actionParameters: SOAPRequestSerializer.Parameters, completion: @escaping (_ isSupported: Bool) -> Void) {
+    public func supportsSOAPAction(actionParameters: SOAPRequestSerializer.Parameters, completion: @escaping (_ isSupported: Bool) -> Void) {
         let soapActionName = actionParameters.soapAction
         
         // only reading SOAP actions support cache, so distpach_async is appropriate to allow for concurrent reads
@@ -186,7 +186,7 @@ open class AbstractUPnPService: AbstractUPnP {
     }
     
     /// overridable by service subclasses
-    open func createEvent(_ eventXML: Data) -> UPnPEvent {
+    public func createEvent(_ eventXML: Data) -> UPnPEvent {
         return UPnPEvent(eventXML: eventXML, service: self)
     }
 }
@@ -293,10 +293,10 @@ extension AbstractUPnP {
 
 /// overrides ExtendedPrintable protocol implementation
 extension AbstractUPnPService {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    @objc override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         properties.add("deviceUSN", property: _deviceUSN)
         properties.add("serviceType", property: serviceType)
         properties.add("serviceID", property: serviceID)

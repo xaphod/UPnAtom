@@ -24,11 +24,11 @@
 import Foundation
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-open class UPnAtom: NSObject {
+public class UPnAtom: NSObject {
     // public
-    open static let sharedInstance = UPnAtom()
-    open let upnpRegistry: UPnPRegistry
-    open var ssdpTypes: Set<String> {
+    public static let sharedInstance = UPnAtom()
+    public let upnpRegistry: UPnPRegistry
+    public var ssdpTypes: Set<String> {
         get { return ssdpDiscoveryAdapter.rawSSDPTypes }
         set { ssdpDiscoveryAdapter.rawSSDPTypes = newValue }
     }
@@ -53,23 +53,23 @@ open class UPnAtom: NSObject {
         ssdpDiscoveryAdapter.stop()
     }
     
-    open func ssdpDiscoveryRunning() -> Bool {
+    public func ssdpDiscoveryRunning() -> Bool {
         return ssdpDiscoveryAdapter.running
     }
     
-    open func startSSDPDiscovery() {
+    public func startSSDPDiscovery() {
         ssdpDiscoveryAdapter.start()
     }
     
-    open func stopSSDPDiscovery() {
+    public func stopSSDPDiscovery() {
         ssdpDiscoveryAdapter.stop()
     }
     
-    open func restartSSDPDiscovery() {
+    public func restartSSDPDiscovery() {
         ssdpDiscoveryAdapter.restart()
     }
     
-    open func resendSearchRequest() {
+    public func resendSearchRequest() {
         ssdpDiscoveryAdapter.resendSearch()
     }
     

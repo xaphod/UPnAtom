@@ -27,12 +27,12 @@ import Ono
 // MARK: ContentDirectory1Object
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-open class ContentDirectory1Object: NSObject {
-    open let objectID: String
-    open let parentID: String
-    open let title: String
-    open let rawType: String
-    open let albumArtURL: URL?
+public class ContentDirectory1Object: NSObject {
+    public let objectID: String
+    public let parentID: String
+    public let title: String
+    public let rawType: String
+    public let albumArtURL: URL?
     
     init?(xmlElement: ONOXMLElement) {
         if let objectID = xmlElement.value(forAttribute: "id") as? String,
@@ -68,7 +68,7 @@ extension ContentDirectory1Object: ExtendedPrintable {
     #elseif os(OSX) // NSObject.className actually exists on OSX! Who knew.
     override public var className: String { return "\(type(of: self))" }
     #endif
-    override open var description: String {
+    override public var description: String {
         var properties = PropertyPrinter()
         properties.add("id", property: objectID)
         properties.add("parentID", property: parentID)
@@ -81,8 +81,8 @@ extension ContentDirectory1Object: ExtendedPrintable {
 
 // MARK: - ContentDirectory1Container
 
-open class ContentDirectory1Container: ContentDirectory1Object {
-    open let childCount: Int?
+public class ContentDirectory1Container: ContentDirectory1Object {
+    public let childCount: Int?
     
     override init?(xmlElement: ONOXMLElement) {
         self.childCount = Int(String(describing: xmlElement.value(forAttribute: "childCount")))
@@ -100,10 +100,10 @@ extension ContentDirectory1Object {
 
 /// overrides ExtendedPrintable protocol implementation
 extension ContentDirectory1Container {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         properties.add("childCount", property: "\(String(describing: childCount))")
         return properties.description
     }
@@ -111,8 +111,8 @@ extension ContentDirectory1Container {
 
 // MARK: - ContentDirectory1Item
 
-open class ContentDirectory1Item: ContentDirectory1Object {
-    open let resourceURL: URL!
+public class ContentDirectory1Item: ContentDirectory1Object {
+    public let resourceURL: URL!
     
     override init?(xmlElement: ONOXMLElement) {
         /// TODO: Return nil immediately instead of waiting, see Github issue #11
@@ -137,10 +137,10 @@ extension ContentDirectory1Object {
 
 /// overrides ExtendedPrintable protocol implementation
 extension ContentDirectory1Item {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         properties.add("resourceURL", property: resourceURL?.absoluteString)
         return properties.description
     }
@@ -148,14 +148,14 @@ extension ContentDirectory1Item {
 
 // MARK: - ContentDirectory1VideoItem
 
-open class ContentDirectory1VideoItem: ContentDirectory1Item {
-    open let bitrate: Int?
-    open let duration: TimeInterval?
-    open let audioChannelCount: Int?
-    open let protocolInfo: String?
-    open let resolution: CGSize?
-    open let sampleFrequency: Int?
-    open let size: Int?
+public class ContentDirectory1VideoItem: ContentDirectory1Item {
+    public let bitrate: Int?
+    public let duration: TimeInterval?
+    public let audioChannelCount: Int?
+    public let protocolInfo: String?
+    public let resolution: CGSize?
+    public let sampleFrequency: Int?
+    public let size: Int?
     
     override init?(xmlElement: ONOXMLElement) {
         bitrate = Int(String(describing: xmlElement.firstChild(withTag: "res").value(forAttribute: "bitrate")))
@@ -199,10 +199,10 @@ extension ContentDirectory1Object {
 
 /// overrides ExtendedPrintable protocol implementation
 extension ContentDirectory1VideoItem {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         properties.add("bitrate", property: "\(String(describing: bitrate))")
         properties.add("duration", property: "\(String(describing: duration))")
         properties.add("audioChannelCount", property: "\(String(describing: audioChannelCount))")
@@ -215,7 +215,7 @@ extension ContentDirectory1VideoItem {
 }
 
 
-open class ContentDirectory1AudioItem: ContentDirectory1Item {
+public class ContentDirectory1AudioItem: ContentDirectory1Item {
     public let duration: TimeInterval?
     public let protocolInfo: String?
     

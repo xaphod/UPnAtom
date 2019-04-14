@@ -23,16 +23,16 @@
 
 import Foundation
 
-open class MediaServer1Device: AbstractUPnPDevice {
-    open var avTransportService: AVTransport1Service? {
+public class MediaServer1Device: AbstractUPnPDevice {
+    public var avTransportService: AVTransport1Service? {
         return service(forURN: "urn:schemas-upnp-org:service:AVTransport:1") as? AVTransport1Service
     }
     
-    open var connectionManagerService: ConnectionManager1Service? {
+    public var connectionManagerService: ConnectionManager1Service? {
         return service(forURN: "urn:schemas-upnp-org:service:ConnectionManager:1") as? ConnectionManager1Service
     }
     
-    open var contentDirectoryService: ContentDirectory1Service? {
+    public var contentDirectoryService: ContentDirectory1Service? {
         return service(forURN: "urn:schemas-upnp-org:service:ContentDirectory:1") as? ContentDirectory1Service
     }
 }
@@ -46,10 +46,10 @@ extension AbstractUPnP {
 
 /// overrides ExtendedPrintable protocol implementation
 extension MediaServer1Device {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         return properties.description
     }
 }

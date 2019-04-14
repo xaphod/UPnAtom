@@ -24,16 +24,16 @@
 import Foundation
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-open class AbstractUPnP: NSObject {
-    open var uuid: String {
+public class AbstractUPnP: NSObject {
+    public var uuid: String {
         return usn.uuid
     }
-    open var urn: String {
+    public var urn: String {
         return usn.urn! // checked for nil during init
     }
-    open let usn: UniqueServiceName
-    open let descriptionURL: URL
-    open var baseURL: URL! {
+    public let usn: UniqueServiceName
+    public let descriptionURL: URL
+    public var baseURL: URL! {
         return URL(string: "/", relativeTo: descriptionURL)?.absoluteURL
     }
     
@@ -54,17 +54,17 @@ public func ==(lhs: AbstractUPnP, rhs: AbstractUPnP) -> Bool {
 }
 
 extension AbstractUPnP {
-    override open var hashValue: Int {
+    override public var hashValue: Int {
         return usn.hashValue
     }
     
     /// Because self is rooted to NSObject, for now, usage as a key in a dictionary will be treated as a key within an NSDictionary; which requires the overriding the methods hash and isEqual, see Github issue #16
-    override open var hash: Int {
+    override public var hash: Int {
         return hashValue
     }
     
     /// Because self is rooted to NSObject, for now, usage as a key in a dictionary will be treated as a key within an NSDictionary; which requires the overriding the methods hash and isEqual, see Github issue #16
-    override open func isEqual(_ object: Any?) -> Bool {
+    override public func isEqual(_ object: Any?) -> Bool {
         if let other = object as? AbstractUPnP {
             return self == other
         }
@@ -73,12 +73,16 @@ extension AbstractUPnP {
 }
 
 extension AbstractUPnP: ExtendedPrintable {
+    public var className: String {
+        return "\(type(of: self))"
+    }
+    
     #if os(iOS)
-    public var className: String { return "\(type(of: self))" }
+//    public var className: String { return "\(type(of: self))" }
     #elseif os(OSX) // NSObject.className actually exists on OSX! Who knew.
-    override public var className: String { return "\(type(of: self))" }
+//    override public var className: String { return "\(type(of: self))" }
     #endif
-    override open var description: String {
+    override public var description: String {
         var properties = PropertyPrinter()
         properties.add("uuid", property: uuid)
         properties.add("urn", property: urn)

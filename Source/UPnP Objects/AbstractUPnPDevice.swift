@@ -22,15 +22,16 @@
 //  SOFTWARE.
 
 import Foundation
+import CoreGraphics
 
-open class AbstractUPnPDevice: AbstractUPnP {
+public class AbstractUPnPDevice: AbstractUPnP {
     /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-    open class IconDescription: CustomStringConvertible {
-        open let relativeURL: URL
-        open let size: CGSize
-        open let colorDepth: Int
-        open let mimeType: String
-        open var description: String {
+    public class IconDescription: CustomStringConvertible {
+        public let relativeURL: URL
+        public let size: CGSize
+        public let colorDepth: Int
+        public let mimeType: String
+        public var description: String {
             return "\(relativeURL.absoluteString) (\(mimeType):\(size.width)x\(size.height))"
         }
         
@@ -43,23 +44,23 @@ open class AbstractUPnPDevice: AbstractUPnP {
     }
     
     // public
-    open var deviceType: String {
+    public var deviceType: String {
         return urn
     }
-    open var udn: String {
+    public var udn: String {
         return uuid
     }
-    open fileprivate(set) var friendlyName: String! // TODO: Should ideally be a constant, see Github issue #10
-    open fileprivate(set) var manufacturer: String! // TODO: Should ideally be a constant, see Github issue #10
-    open fileprivate(set) var manufacturerURL: URL? // TODO: Should ideally be a constant, see Github issue #10
-    open fileprivate(set) var modelDescription: String? // TODO: Should ideally be a constant, see Github issue #10
-    open fileprivate(set) var modelName: String! // TODO: Should ideally be a constant, see Github issue #10
-    open fileprivate(set) var modelNumber: String? // TODO: Should ideally be a constant, see Github issue #10
-    open fileprivate(set) var modelURL: URL? // TODO: Should ideally be a constant, see Github issue #10
-    open fileprivate(set) var serialNumber: String? // TODO: Should ideally be a constant, see Github issue #10
-    open fileprivate(set) var iconDescriptions: [IconDescription]? // TODO: Should ideally be a constant, see Github issue #10
-    open weak var serviceSource: UPnPServiceSource?
-    override open var baseURL: URL! {
+    public fileprivate(set) var friendlyName: String! // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var manufacturer: String! // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var manufacturerURL: URL? // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var modelDescription: String? // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var modelName: String! // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var modelNumber: String? // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var modelURL: URL? // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var serialNumber: String? // TODO: Should ideally be a constant, see Github issue #10
+    public fileprivate(set) var iconDescriptions: [IconDescription]? // TODO: Should ideally be a constant, see Github issue #10
+    public weak var serviceSource: UPnPServiceSource?
+    override public var baseURL: URL! {
         if let baseURL = _baseURLFromXML {
             return baseURL
         }
@@ -95,7 +96,7 @@ open class AbstractUPnPDevice: AbstractUPnP {
         self.iconDescriptions = parsedDevice?.iconDescriptions
     }
     
-    open func service(forURN urn: String) -> AbstractUPnPService? {
+    public func service(forURN urn: String) -> AbstractUPnPService? {
         return serviceSource?.service(forUSN: UniqueServiceName(uuid: uuid, urn: urn)!)
     }
 }
@@ -109,10 +110,10 @@ extension AbstractUPnP {
 
 /// overrides ExtendedPrintable protocol implementation
 extension AbstractUPnPDevice {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         properties.add("deviceType", property: deviceType)
         properties.add("udn", property: udn)
         properties.add("friendlyName", property: friendlyName)

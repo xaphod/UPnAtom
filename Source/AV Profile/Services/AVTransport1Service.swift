@@ -23,8 +23,8 @@
 
 import Foundation
 
-open class AVTransport1Service: AbstractUPnPService {
-    open func setAVTransportURI(instanceID: String, currentURI: String, currentURIMetadata: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+public class AVTransport1Service: AbstractUPnPService {
+    public func setAVTransportURI(instanceID: String, currentURI: String, currentURIMetadata: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "InstanceID" , instanceID,
             "CurrentURI" , currentURI,
@@ -39,7 +39,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func setNextAVTransportURI(instanceID: String, nextURI: String, nextURIMetadata: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func setNextAVTransportURI(instanceID: String, nextURI: String, nextURIMetadata: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "InstanceID",instanceID,
             "NextURI",nextURI,
@@ -61,7 +61,7 @@ open class AVTransport1Service: AbstractUPnPService {
         }
     }
     
-    open func getMediaInfo(instanceID: String, success: @escaping (_ numberOfTracks: Int, _ mediaDuration: String?, _ currentURI: String?, _ currentURIMetaData: String?, _ nextURI: String?, _ nextURIMetaData: String?, _ playMedium: String?, _ recordMedium: String?, _ writeStatus: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func getMediaInfo(instanceID: String, success: @escaping (_ numberOfTracks: Int, _ mediaDuration: String?, _ currentURI: String?, _ currentURIMetaData: String?, _ nextURI: String?, _ nextURIMetaData: String?, _ playMedium: String?, _ recordMedium: String?, _ writeStatus: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetMediaInfo", serviceURN: urn, arguments: arguments)
@@ -79,7 +79,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func getTransportInfo(instanceID: String, success: @escaping (_ currentTransportState: String?, _ currentTransportStatus: String?, _ currentSpeed: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func getTransportInfo(instanceID: String, success: @escaping (_ currentTransportState: String?, _ currentTransportStatus: String?, _ currentSpeed: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetTransportInfo", serviceURN: urn, arguments: arguments)
@@ -92,7 +92,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func getPositionInfo(instanceID: String, success: @escaping (_ track: String?, _ trackDuration: String?, _ trackMetaData: String?, _ trackURI: String?, _ relativeTime: String?, _ absoluteTime: String?, _ relativeCount: String?, _ absoluteCount: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func getPositionInfo(instanceID: String, success: @escaping (_ track: String?, _ trackDuration: String?, _ trackMetaData: String?, _ trackURI: String?, _ relativeTime: String?, _ absoluteTime: String?, _ relativeCount: String?, _ absoluteCount: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetPositionInfo", serviceURN: urn, arguments: arguments)
@@ -105,7 +105,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func getDeviceCapabilities(instanceID: String, success: @escaping (_ playMedia: String?, _ recordMedia: String?, _ recordQualityModes: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func getDeviceCapabilities(instanceID: String, success: @escaping (_ playMedia: String?, _ recordMedia: String?, _ recordQualityModes: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetDeviceCapabilities", serviceURN: urn, arguments: arguments)
@@ -118,7 +118,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func getTransportSettings(instanceID: String, success: @escaping (_ playMode: String?, _ recordQualityMode: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func getTransportSettings(instanceID: String, success: @escaping (_ playMode: String?, _ recordQualityMode: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetTransportSettings", serviceURN: urn, arguments: arguments)
@@ -131,7 +131,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func stop(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func stop(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Stop", serviceURN: urn, arguments: arguments)
@@ -143,7 +143,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func play(instanceID: String, speed: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func play(instanceID: String, speed: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "InstanceID",instanceID,
             "Speed",speed]
@@ -157,7 +157,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func pause(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func pause(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Pause", serviceURN: urn, arguments: arguments)
@@ -176,7 +176,7 @@ open class AVTransport1Service: AbstractUPnPService {
         }
     }
 
-    open func record(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func record(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Record", serviceURN: urn, arguments: arguments)
@@ -195,7 +195,7 @@ open class AVTransport1Service: AbstractUPnPService {
         }
     }
     
-    open func seek(instanceID: String, unit: String, target: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func seek(instanceID: String, unit: String, target: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "InstanceID",instanceID,
             "Unit",unit,
@@ -210,7 +210,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func next(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func next(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Next", serviceURN: urn, arguments: arguments)
@@ -222,7 +222,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func previous(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func previous(instanceID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "Previous", serviceURN: urn, arguments: arguments)
@@ -234,7 +234,7 @@ open class AVTransport1Service: AbstractUPnPService {
         })
     }
     
-    open func setPlayMode(instanceID: String, newPlayMode: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func setPlayMode(instanceID: String, newPlayMode: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "InstanceID",instanceID,
             "NewPlayMode",newPlayMode]
@@ -255,7 +255,7 @@ open class AVTransport1Service: AbstractUPnPService {
         }
     }
     
-    open func setRecordQualityMode(instanceID: String, newPlayMode: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func setRecordQualityMode(instanceID: String, newPlayMode: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "InstanceID",instanceID,
             "NewRecordQualityMode",newPlayMode]
@@ -276,7 +276,7 @@ open class AVTransport1Service: AbstractUPnPService {
         }
     }
     
-    open func getCurrentTransportActions(instanceID: String, success: @escaping (_ actions: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func getCurrentTransportActions(instanceID: String, success: @escaping (_ actions: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetCurrentTransportActions", serviceURN: urn, arguments: arguments)
@@ -296,7 +296,7 @@ open class AVTransport1Service: AbstractUPnPService {
         }
     }
 
-    override open func createEvent(_ eventXML: Data) -> UPnPEvent {
+    override public func createEvent(_ eventXML: Data) -> UPnPEvent {
         return AVTransport1Event(eventXML: eventXML, service: self)
     }
 }
@@ -310,10 +310,10 @@ extension AbstractUPnP {
 
 /// overrides ExtendedPrintable protocol implementation
 extension AVTransport1Service {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         return properties.description
     }
 }

@@ -25,7 +25,7 @@ import Foundation
 import AFNetworking
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-open class UPnPRegistry: NSObject {
+public class UPnPRegistry: NSObject {
     fileprivate enum UPnPObjectNotificationType {
         case device
         case service
@@ -61,7 +61,7 @@ open class UPnPRegistry: NSObject {
     }
     
     /// Safe to call from any thread
-    open func upnpDevices(completionQueue: OperationQueue, completion: @escaping (_ upnpDevices: [AbstractUPnPDevice]) -> Void) {
+    public func upnpDevices(completionQueue: OperationQueue, completion: @escaping (_ upnpDevices: [AbstractUPnPDevice]) -> Void) {
         upnpObjects { (upnpObjects: [UniqueServiceName: AbstractUPnP]) -> Void in
             let upnpDevices = Array(upnpObjects.values).filter({$0 is AbstractUPnPDevice})
             
@@ -72,7 +72,7 @@ open class UPnPRegistry: NSObject {
     }
     
     /// Safe to call from any thread
-    open func upnpServices(completionQueue: OperationQueue, completion: @escaping (_ upnpServices: [AbstractUPnPService]) -> Void) {
+    public func upnpServices(completionQueue: OperationQueue, completion: @escaping (_ upnpServices: [AbstractUPnPService]) -> Void) {
         upnpObjects { (upnpObjects: [UniqueServiceName: AbstractUPnP]) -> Void in
             let upnpServices = Array(upnpObjects.values).filter({$0 is AbstractUPnPService})
             
@@ -82,11 +82,11 @@ open class UPnPRegistry: NSObject {
         }
     }
     
-    open func register(upnpClass: AbstractUPnP.Type, forURN urn: String) {
+    public func register(upnpClass: AbstractUPnP.Type, forURN urn: String) {
         _upnpClasses[urn] = upnpClass
     }
     
-    open func createUPnPObject(upnpArchivable: UPnPArchivable, callbackQueue: OperationQueue, success: @escaping ((_ upnpObject: AbstractUPnP) -> Void), failure: @escaping ((_ error: NSError) -> Void)) {
+    public func createUPnPObject(upnpArchivable: UPnPArchivable, callbackQueue: OperationQueue, success: @escaping ((_ upnpObject: AbstractUPnP) -> Void), failure: @escaping ((_ error: NSError) -> Void)) {
         let failureCase = { (error: NSError) -> Void in
             LogError("Unable to fetch UPnP object description for archivable: \(upnpArchivable.usn) at \(upnpArchivable.descriptionURL): \(error)")
             callbackQueue.addOperation({ () -> Void in

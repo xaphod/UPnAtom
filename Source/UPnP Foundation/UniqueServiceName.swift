@@ -24,11 +24,11 @@
 import Foundation
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-open class UniqueServiceName: NSObject, RawRepresentable {
-    open let rawValue: RawValue
-    open let uuid: String
-    open let urn: String?
-    open let rootDevice: Bool
+public class UniqueServiceName: NSObject, RawRepresentable {
+    public let rawValue: RawValue
+    public let uuid: String
+    public let urn: String?
+    public let rootDevice: Bool
     
     public typealias RawValue = String
     
@@ -86,23 +86,23 @@ open class UniqueServiceName: NSObject, RawRepresentable {
 }
 
 extension UniqueServiceName {
-    override open var description: String {
+    override public var description: String {
         return rawValue
     }
 }
 
 extension UniqueServiceName {
-    override open var hashValue: Int {
+    override public var hashValue: Int {
         return rawValue.hashValue
     }
     
     /// Because self is rooted to NSObject, for now, usage as a key in a dictionary will be treated as a key within an NSDictionary; which requires the overriding the methods hash and isEqual, see Github issue #16
-    override open var hash: Int {
+    override public var hash: Int {
         return hashValue
     }
     
     /// Because self is rooted to NSObject, for now, usage as a key in a dictionary will be treated as a key within an NSDictionary; which requires the overriding the methods hash and isEqual, see Github issue #16
-    override open func isEqual(_ object: Any?) -> Bool {
+    override public func isEqual(_ object: Any?) -> Bool {
         if let other = object as? UniqueServiceName {
             return self == other
         }

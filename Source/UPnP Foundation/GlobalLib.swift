@@ -180,7 +180,7 @@ extension Timer {
             self.closure = closure
         }
         
-        dynamic func fire() {
+        @objc dynamic func fire() {
             closure()
         }
     }

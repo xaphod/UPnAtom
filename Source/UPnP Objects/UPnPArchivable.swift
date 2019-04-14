@@ -23,9 +23,9 @@
 
 import Foundation
 
-open class UPnPArchivable: NSObject, NSCoding {
-    open let usn: String
-    open let descriptionURL: URL
+public class UPnPArchivable: NSObject, NSCoding {
+    public let usn: String
+    public let descriptionURL: URL
     
     init(usn: String, descriptionURL: URL) {
         self.usn = usn
@@ -37,7 +37,7 @@ open class UPnPArchivable: NSObject, NSCoding {
         self.descriptionURL = decoder.decodeObject(forKey: "descriptionURL") as! URL
     }
     
-    open func encode(with coder: NSCoder) {
+    public func encode(with coder: NSCoder) {
         coder.encode(usn, forKey: "usn")
         coder.encode(descriptionURL, forKey: "descriptionURL")
     }
@@ -49,9 +49,9 @@ extension AbstractUPnP {
     }
 }
 
-open class UPnPArchivableAnnex: UPnPArchivable {
+public class UPnPArchivableAnnex: UPnPArchivable {
     /// Use the custom metadata dictionary to re-populate any missing data fields from a custom device or service subclass. While it's not enforced by the compiler, the contents of the meta data must conform to the NSCoding protocol in order to be archivable. Avoided using Swift generics in order to allow compatability with Obj-C.
-    open let customMetadata: [String: AnyObject]
+    public let customMetadata: [String: AnyObject]
     
     init(usn: String, descriptionURL: URL, customMetadata: [String: AnyObject]) {
         self.customMetadata = customMetadata
@@ -63,7 +63,7 @@ open class UPnPArchivableAnnex: UPnPArchivable {
         super.init(coder: decoder)
     }
     
-    open override func encode(with coder: NSCoder) {
+    public override func encode(with coder: NSCoder) {
         super.encode(with: coder)
         coder.encode(customMetadata, forKey: "customMetadata")
     }

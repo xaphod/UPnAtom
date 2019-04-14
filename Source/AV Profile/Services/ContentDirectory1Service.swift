@@ -24,8 +24,8 @@
 import Foundation
 import Ono
 
-open class ContentDirectory1Service: AbstractUPnPService {
-    open func getSearchCapabilities(_ success: @escaping (_ searchCapabilities: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+public class ContentDirectory1Service: AbstractUPnPService {
+    public func getSearchCapabilities(_ success: @escaping (_ searchCapabilities: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetSearchCapabilities", serviceURN: urn, arguments: nil)
         
         soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
@@ -36,7 +36,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         })
     }
     
-    open func getSortCapabilities(_ success: @escaping (_ sortCapabilities: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func getSortCapabilities(_ success: @escaping (_ sortCapabilities: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetSortCapabilities", serviceURN: urn, arguments: nil)
         
         soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
@@ -47,7 +47,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         })
     }
     
-    open func getSystemUpdateID(_ success: @escaping (_ systemUpdateID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func getSystemUpdateID(_ success: @escaping (_ systemUpdateID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetSystemUpdateID", serviceURN: urn, arguments: nil)
         
         soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
@@ -58,7 +58,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         })
     }
     
-    open func browse(objectID: String, browseFlag: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: @escaping (_ result: [ContentDirectory1Object], _ numberReturned: Int, _ totalMatches: Int, _ updateID: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func browse(objectID: String, browseFlag: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: @escaping (_ result: [ContentDirectory1Object], _ numberReturned: Int, _ totalMatches: Int, _ updateID: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ObjectID",objectID,
             "BrowseFlag",browseFlag,
@@ -88,7 +88,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         })
     }
     
-    open func search(containerID: String, searchCriteria: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: @escaping (_ result: [ContentDirectory1Object], _ numberReturned: Int, _ totalMatches: Int, _ updateID: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func search(containerID: String, searchCriteria: String, filter: String, startingIndex: String, requestedCount: String, sortCriteria: String, success: @escaping (_ result: [ContentDirectory1Object], _ numberReturned: Int, _ totalMatches: Int, _ updateID: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ContainerID",containerID,
             "SearchCriteria",searchCriteria,
@@ -125,7 +125,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func createObject(containerID: String, elements: String, success: @escaping (_ objectID: String?, _ result: [ContentDirectory1Object]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func createObject(containerID: String, elements: String, success: @escaping (_ objectID: String?, _ result: [ContentDirectory1Object]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ContainerID",containerID,
             "Elements",elements]
@@ -158,7 +158,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func destroyObject(objectID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func destroyObject(objectID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["ObjectID",objectID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "DestroyObject", serviceURN: urn, arguments: arguments)
@@ -177,7 +177,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func updateObject(objectID: String, currentTagValue: String, newTagValue: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func updateObject(objectID: String, currentTagValue: String, newTagValue: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ObjectID",objectID,
             "CurrentTagValue",currentTagValue,
@@ -199,7 +199,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func importResource(sourceURI: String, destinationURI: String, success: @escaping (_ transferID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func importResource(sourceURI: String, destinationURI: String, success: @escaping (_ transferID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "SourceURI",sourceURI,
             "DestinationURI",destinationURI]
@@ -221,7 +221,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func exportResource(sourceURI: String, destinationURI: String, success: @escaping (_ transferID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func exportResource(sourceURI: String, destinationURI: String, success: @escaping (_ transferID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "SourceURI",sourceURI,
             "DestinationURI",destinationURI]
@@ -243,7 +243,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func stopTransferResource(transferID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func stopTransferResource(transferID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["TransferID",transferID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "StopTransferResource", serviceURN: urn, arguments: arguments)
@@ -262,7 +262,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func getTransferProgress(transferID: String, success: @escaping (_ transferStatus: String?, _ transferLength: String?, _ transferTotal: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func getTransferProgress(transferID: String, success: @escaping (_ transferStatus: String?, _ transferLength: String?, _ transferTotal: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["TransferID",transferID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetTransferProgress", serviceURN: urn, arguments: arguments)
@@ -282,7 +282,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func deleteResource(resourceURI: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func deleteResource(resourceURI: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["ResourceURI",resourceURI]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "DeleteResource", serviceURN: urn, arguments: arguments)
@@ -301,7 +301,7 @@ open class ContentDirectory1Service: AbstractUPnPService {
         }
     }
     
-    open func createReference(containerID: String, objectID: String, success: @escaping (_ newID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func createReference(containerID: String, objectID: String, success: @escaping (_ newID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "ContainerID",containerID,
             "ObjectID",objectID]
@@ -333,10 +333,10 @@ extension AbstractUPnP {
 
 /// overrides ExtendedPrintable protocol implementation
 extension ContentDirectory1Service {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         return properties.description
     }
 }

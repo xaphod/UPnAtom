@@ -7,8 +7,8 @@
 
 import Ono
 
-open class RenderingControl1Event: UPnPEvent {
-    open var instanceState = [String: AnyObject]()
+public class RenderingControl1Event: UPnPEvent {
+    public var instanceState = [String: AnyObject]()
     
     override public init(eventXML: Data, service: AbstractUPnPService) {
         super.init(eventXML: eventXML, service: service)

@@ -23,8 +23,8 @@
 
 import Foundation
 
-open class ConnectionManager1Service: AbstractUPnPService {
-    open func getProtocolInfo(_ success: @escaping (_ source: [String], _ sink: [String]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+public class ConnectionManager1Service: AbstractUPnPService {
+    public func getProtocolInfo(_ success: @escaping (_ source: [String], _ sink: [String]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetProtocolInfo", serviceURN: urn, arguments: nil)
         
         soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
@@ -35,7 +35,7 @@ open class ConnectionManager1Service: AbstractUPnPService {
         })
     }
     
-    open func prepareForConnection(remoteProtocolInfo: String, peerConnectionManager: String, peerConnectionID: String, direction: String, success: @escaping (_ connectionID: String?, _ avTransportID: String?, _ renderingControlServiceID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func prepareForConnection(remoteProtocolInfo: String, peerConnectionManager: String, peerConnectionID: String, direction: String, success: @escaping (_ connectionID: String?, _ avTransportID: String?, _ renderingControlServiceID: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "RemoteProtocolInfo",remoteProtocolInfo,
             "PeerConnectionManager",peerConnectionManager,
@@ -59,7 +59,7 @@ open class ConnectionManager1Service: AbstractUPnPService {
         }
     }
     
-    open func connectionComplete(connectionID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
+    public func connectionComplete(connectionID: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = ["ConnectionID",connectionID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "ConnectionComplete", serviceURN: urn, arguments: arguments)
@@ -78,7 +78,7 @@ open class ConnectionManager1Service: AbstractUPnPService {
         }
     }
     
-    open func getCurrentConnectionIDs(_ success: @escaping (_ connectionIDs: [String]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func getCurrentConnectionIDs(_ success: @escaping (_ connectionIDs: [String]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetCurrentConnectionIDs", serviceURN: urn, arguments: nil)
         
         soapSessionManager.post(self.controlURL.absoluteString, parameters: parameters, success: { (task: URLSessionDataTask, responseObject: Any?) -> Void in
@@ -89,7 +89,7 @@ open class ConnectionManager1Service: AbstractUPnPService {
         })
     }
     
-    open func getCurrentConnectionInfo(connectionID: String, success: @escaping (_ renderingControlServiceID: String?, _ avTransportID: String?, _ protocolInfo: String?, _ peerConnectionManager: String?, _ peerConnectionID: String?, _ direction: String?, _ status: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
+    public func getCurrentConnectionInfo(connectionID: String, success: @escaping (_ renderingControlServiceID: String?, _ avTransportID: String?, _ protocolInfo: String?, _ peerConnectionManager: String?, _ peerConnectionID: String?, _ direction: String?, _ status: String?) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = ["ConnectionID",connectionID]
         
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetCurrentConnectionInfo", serviceURN: urn, arguments: arguments)
@@ -112,10 +112,10 @@ extension AbstractUPnP {
 
 /// overrides ExtendedPrintable protocol implementation
 extension ConnectionManager1Service {
-    override public var className: String { return "\(type(of: self))" }
-    override open var description: String {
+//    override public var className: String { return "\(type(of: self))" }
+    override public var description: String {
         var properties = PropertyPrinter()
-        properties.add(super.className, property: super.description)
+//        properties.add(super.className, property: super.description)
         return properties.description
     }
 }

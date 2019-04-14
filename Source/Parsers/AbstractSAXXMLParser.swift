@@ -24,7 +24,7 @@
 import Foundation
 
 // Subclassing NSObject in order to be a NSXMLParserDelegate
-open class AbstractSAXXMLParser: NSObject {
+public class AbstractSAXXMLParser: NSObject {
     fileprivate let _supportNamespaces: Bool
     lazy fileprivate var _elementStack = [String]()
     lazy fileprivate var _elementObservations = [SAXXMLParserElementObservation]()
@@ -37,11 +37,11 @@ open class AbstractSAXXMLParser: NSObject {
         self.init(supportNamespaces: false)
     }
     
-    open func addElementObservation(_ elementObservation: SAXXMLParserElementObservation) {
+    public func addElementObservation(_ elementObservation: SAXXMLParserElementObservation) {
         _elementObservations.append(elementObservation)
     }
     
-    open func clearAllElementObservations() {
+    public func clearAllElementObservations() {
         _elementObservations.removeAll(keepingCapacity: false)
     }
     
@@ -88,7 +88,7 @@ open class AbstractSAXXMLParser: NSObject {
         return nil
     }
     
-    open func parse(data: Data) -> EmptyResult {
+    public func parse(data: Data) -> EmptyResult {
         var parserResult: EmptyResult = .failure(createError("Parser failure"))
         autoreleasepool { () -> () in
             if let validData = self.validateForParsing(data) {

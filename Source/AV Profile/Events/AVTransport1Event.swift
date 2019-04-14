@@ -24,8 +24,8 @@
 
 import Ono
 
-open class AVTransport1Event: UPnPEvent {
-    open var instanceState = [String: AnyObject]()
+public class AVTransport1Event: UPnPEvent {
+    public var instanceState = [String: AnyObject]()
     
     override public init(eventXML: Data, service: AbstractUPnPService) {
         super.init(eventXML: eventXML, service: service)
