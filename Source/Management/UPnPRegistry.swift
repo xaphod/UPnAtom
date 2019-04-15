@@ -25,7 +25,7 @@ import Foundation
 import AFNetworking
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-public class UPnPRegistry: NSObject {
+@objcMembers public class UPnPRegistry: NSObject {
     fileprivate enum UPnPObjectNotificationType {
         case device
         case service

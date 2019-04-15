@@ -23,7 +23,7 @@
 
 import Foundation
 
-public class RenderingControl1Service: AbstractUPnPService {
+@objcMembers public class RenderingControl1Service: AbstractUPnPService {
     public func listPresets(instanceID: String, success: @escaping (_ presetNameList: [String]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let arguments = ["InstanceID",instanceID]
         

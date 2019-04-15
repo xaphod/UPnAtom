@@ -27,7 +27,7 @@ import Ono
 // MARK: ContentDirectory1Object
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-public class ContentDirectory1Object: NSObject {
+@objcMembers public class ContentDirectory1Object: NSObject {
     public let objectID: String
     public let parentID: String
     public let title: String
@@ -81,7 +81,7 @@ extension ContentDirectory1Object: ExtendedPrintable {
 
 // MARK: - ContentDirectory1Container
 
-public class ContentDirectory1Container: ContentDirectory1Object {
+@objcMembers public class ContentDirectory1Container: ContentDirectory1Object {
     public let childCount: Int?
     
     override init?(xmlElement: ONOXMLElement) {
@@ -111,7 +111,7 @@ extension ContentDirectory1Container {
 
 // MARK: - ContentDirectory1Item
 
-public class ContentDirectory1Item: ContentDirectory1Object {
+@objcMembers public class ContentDirectory1Item: ContentDirectory1Object {
     public let resourceURL: URL!
     
     override init?(xmlElement: ONOXMLElement) {
@@ -148,7 +148,7 @@ extension ContentDirectory1Item {
 
 // MARK: - ContentDirectory1VideoItem
 
-public class ContentDirectory1VideoItem: ContentDirectory1Item {
+@objcMembers public class ContentDirectory1VideoItem: ContentDirectory1Item {
     public let bitrate: Int?
     public let duration: TimeInterval?
     public let audioChannelCount: Int?
@@ -215,7 +215,7 @@ extension ContentDirectory1VideoItem {
 }
 
 
-public class ContentDirectory1AudioItem: ContentDirectory1Item {
+@objcMembers public class ContentDirectory1AudioItem: ContentDirectory1Item {
     public let duration: TimeInterval?
     public let protocolInfo: String?
     

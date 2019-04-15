@@ -28,8 +28,8 @@ import Foundation
 import AFNetworking
 import Ono
 
-public class SOAPRequestSerializer: AFHTTPRequestSerializer {
-    public class Parameters {
+@objcMembers public class SOAPRequestSerializer: AFHTTPRequestSerializer {
+    @objcMembers public class Parameters {
         let soapAction: String
         let serviceURN: String
         let arguments: [String]?
@@ -90,7 +90,7 @@ public class SOAPRequestSerializer: AFHTTPRequestSerializer {
     }
 }
 
-public class SOAPResponseSerializer: AFXMLParserResponseSerializer {
+@objcMembers public class SOAPResponseSerializer: AFXMLParserResponseSerializer {
     override public func responseObject(for response: URLResponse?, data: Data?, error: NSErrorPointer) -> Any? {
         do {
             try validate(response as? HTTPURLResponse, data: data)

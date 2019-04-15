@@ -24,7 +24,7 @@
 import Foundation
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-public class AbstractUPnP: NSObject {
+@objcMembers public class AbstractUPnP: NSObject {
     public var uuid: String {
         return usn.uuid
     }

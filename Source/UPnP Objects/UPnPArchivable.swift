@@ -23,7 +23,7 @@
 
 import Foundation
 
-public class UPnPArchivable: NSObject, NSCoding {
+@objcMembers public class UPnPArchivable: NSObject, NSCoding {
     public let usn: String
     public let descriptionURL: URL
     
@@ -49,7 +49,7 @@ extension AbstractUPnP {
     }
 }
 
-public class UPnPArchivableAnnex: UPnPArchivable {
+@objcMembers public class UPnPArchivableAnnex: UPnPArchivable {
     /// Use the custom metadata dictionary to re-populate any missing data fields from a custom device or service subclass. While it's not enforced by the compiler, the contents of the meta data must conform to the NSCoding protocol in order to be archivable. Avoided using Swift generics in order to allow compatability with Obj-C.
     public let customMetadata: [String: AnyObject]
     

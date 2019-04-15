@@ -24,7 +24,7 @@
 import Foundation
 import AFNetworking
 
-public class SOAPSessionManager: AFHTTPSessionManager {
+@objcMembers public class SOAPSessionManager: AFHTTPSessionManager {
     override init(baseURL url: URL?, sessionConfiguration configuration: URLSessionConfiguration?) {
         super.init(baseURL: url, sessionConfiguration: configuration)
         

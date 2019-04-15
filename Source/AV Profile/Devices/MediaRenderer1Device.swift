@@ -23,7 +23,7 @@
 
 import Foundation
 
-public class MediaRenderer1Device: AbstractUPnPDevice {
+@objcMembers public class MediaRenderer1Device: AbstractUPnPDevice {
     public var avTransportService: AVTransport1Service? {
         return service(forURN: "urn:schemas-upnp-org:service:AVTransport:1") as? AVTransport1Service
     }

@@ -7,7 +7,7 @@
 
 import Ono
 
-public class RenderingControl1Event: UPnPEvent {
+@objcMembers public class RenderingControl1Event: UPnPEvent {
     public var instanceState = [String: AnyObject]()
     
     override public init(eventXML: Data, service: AbstractUPnPService) {

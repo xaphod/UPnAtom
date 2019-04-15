@@ -23,7 +23,7 @@
 
 import Foundation
 
-public class SAXXMLParserElementObservation {
+@objcMembers public class SAXXMLParserElementObservation {
     // internal
     fileprivate(set) var didStartParsingElement: ((_ elementName: String, _ attributeDict: [AnyHashable: Any]?) -> Void)? // TODO: Should ideally be a constant, see Github issue #10
     let didEndParsingElement: ((_ elementName: String) -> Void)?

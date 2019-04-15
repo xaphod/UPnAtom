@@ -24,7 +24,7 @@
 import Foundation
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-public class UniqueServiceName: NSObject, RawRepresentable {
+@objcMembers public class UniqueServiceName: NSObject, RawRepresentable {
     public let rawValue: RawValue
     public let uuid: String
     public let urn: String?

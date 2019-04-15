@@ -24,7 +24,7 @@
 import Foundation
 
 // Subclassing NSObject in order to be a NSXMLParserDelegate
-public class AbstractSAXXMLParser: NSObject {
+@objcMembers public class AbstractSAXXMLParser: NSObject {
     fileprivate let _supportNamespaces: Bool
     lazy fileprivate var _elementStack = [String]()
     lazy fileprivate var _elementObservations = [SAXXMLParserElementObservation]()

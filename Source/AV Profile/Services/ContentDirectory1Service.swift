@@ -24,7 +24,7 @@
 import Foundation
 import Ono
 
-public class ContentDirectory1Service: AbstractUPnPService {
+@objcMembers public class ContentDirectory1Service: AbstractUPnPService {
     public func getSearchCapabilities(_ success: @escaping (_ searchCapabilities: String?) -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetSearchCapabilities", serviceURN: urn, arguments: nil)
         

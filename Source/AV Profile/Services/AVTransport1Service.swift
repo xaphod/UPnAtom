@@ -23,7 +23,7 @@
 
 import Foundation
 
-public class AVTransport1Service: AbstractUPnPService {
+@objcMembers public class AVTransport1Service: AbstractUPnPService {
     public func setAVTransportURI(instanceID: String, currentURI: String, currentURIMetadata: String, success: @escaping () -> Void, failure:@escaping (_ error: NSError) -> Void) {
         let arguments = [
             "InstanceID" , instanceID,

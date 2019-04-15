@@ -24,7 +24,7 @@
 import Foundation
 import Ono
 
-public class AbstractDOMXMLParser {
+@objcMembers public class AbstractDOMXMLParser {
     public func parse(data: Data) -> EmptyResult {
         LogVerbose("Parsing XML:\nSTART\n\(String(describing: NSString(data: data, encoding: String.Encoding.utf8.rawValue)))\nEND")
         

@@ -24,9 +24,9 @@
 import Foundation
 import CoreGraphics
 
-public class AbstractUPnPDevice: AbstractUPnP {
+@objcMembers public class AbstractUPnPDevice: AbstractUPnP {
     /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-    public class IconDescription: CustomStringConvertible {
+    @objcMembers public class IconDescription: CustomStringConvertible {
         public let relativeURL: URL
         public let size: CGSize
         public let colorDepth: Int

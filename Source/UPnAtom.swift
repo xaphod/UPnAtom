@@ -24,7 +24,7 @@
 import Foundation
 
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
-public class UPnAtom: NSObject {
+@objcMembers public class UPnAtom: NSObject {
     // public
     public static let sharedInstance = UPnAtom()
     public let upnpRegistry: UPnPRegistry

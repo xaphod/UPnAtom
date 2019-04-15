@@ -23,7 +23,7 @@
 
 import Foundation
 
-public class ConnectionManager1Service: AbstractUPnPService {
+@objcMembers public class ConnectionManager1Service: AbstractUPnPService {
     public func getProtocolInfo(_ success: @escaping (_ source: [String], _ sink: [String]) -> Void, failure: @escaping (_ error: NSError) -> Void) {
         let parameters = SOAPRequestSerializer.Parameters(soapAction: "GetProtocolInfo", serviceURN: urn, arguments: nil)
         

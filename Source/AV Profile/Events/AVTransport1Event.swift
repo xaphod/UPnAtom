@@ -24,7 +24,7 @@
 
 import Ono
 
-public class AVTransport1Event: UPnPEvent {
+@objcMembers public class AVTransport1Event: UPnPEvent {
     public var instanceState = [String: AnyObject]()
     
     override public init(eventXML: Data, service: AbstractUPnPService) {

@@ -25,7 +25,7 @@ import Foundation
 import Ono
 import AFNetworking
 
-public class AbstractUPnPService: AbstractUPnP {
+@objcMembers public class AbstractUPnPService: AbstractUPnP {
     // public
     public var serviceType: String {
         return urn
