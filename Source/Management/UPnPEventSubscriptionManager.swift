@@ -228,9 +228,17 @@ class UPnPEventSubscriptionManager {
     
     fileprivate func handleIncomingEvent(subscriptionID: String, eventData: Data) {
         subscriptions { (subscriptions: [String: Subscription]) -> Void in
-            if let subscription: Subscription = (Array(subscriptions.values) as NSArray).firstUsingPredicate(NSPredicate(format: "subscriptionID = %@", subscriptionID)) {
+            
+            let filtered = subscriptions.filter({ (arg0 ) -> Bool in
+                    let (_, value) = arg0
+                    if value.subscriptionID == subscriptionID {
+                        return true;
+                    }
+                    return false;
+            })
+            if let subSubscription = filtered.first {
                 DispatchQueue.main.async(execute: { () -> Void in
-                    subscription.subscriber?.handleEvent(self, eventXML: eventData)
+                    subSubscription.value.subscriber?.handleEvent(self, eventXML: eventData)
                     return
                 })
             }
