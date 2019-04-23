@@ -30,7 +30,7 @@ import AFNetworking
         
         self.requestSerializer = SOAPRequestSerializer()
         self.responseSerializer = SOAPResponseSerializer()
-        self.completionQueue = UPnAtom.delegateQueue
+        self.completionQueue = DispatchQueue.global()
     }
     
     required public init?(coder aDecoder: NSCoder) {

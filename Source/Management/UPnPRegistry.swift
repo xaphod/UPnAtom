@@ -65,7 +65,7 @@ import AFNetworking
         upnpObjects { (upnpObjects: [UniqueServiceName: AbstractUPnP]) -> Void in
             let upnpDevices = Array(upnpObjects.values).filter({$0 is AbstractUPnPDevice})
             
-            UPnAtom.delegateQueue.async {
+            DispatchQueue.global().async {
                 completion(upnpDevices as! [AbstractUPnPDevice])
             }
         }
@@ -76,7 +76,7 @@ import AFNetworking
         upnpObjects { (upnpObjects: [UniqueServiceName: AbstractUPnP]) -> Void in
             let upnpServices = Array(upnpObjects.values).filter({$0 is AbstractUPnPService})
             
-            UPnAtom.delegateQueue.async {
+            DispatchQueue.global().async {
                 completion(upnpServices as! [AbstractUPnPService])
             }
         }
