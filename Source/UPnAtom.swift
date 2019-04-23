@@ -57,20 +57,20 @@ import Foundation
         return ssdpDiscoveryAdapter.running
     }
     
-    public func startSSDPDiscovery() {
+    public func start() {
         ssdpDiscoveryAdapter.start()
     }
     
-    public func stopSSDPDiscovery() {
+    public func stop() {
         ssdpDiscoveryAdapter.stop()
     }
     
-    public func restartSSDPDiscovery() {
+    public func restart() {
         ssdpDiscoveryAdapter.restart()
     }
     
-    public func resendSearchRequest() {
-        ssdpDiscoveryAdapter.resendSearch()
+    public func search() {
+        ssdpDiscoveryAdapter.search()
     }
     
     /// Override to use a different SSDP adapter if another SSDP system is preferred over CocoaSSDP

@@ -45,14 +45,14 @@ class SSDPExplorerDiscoveryAdapter: AbstractSSDPDiscoveryAdapter {
                 types.append(ssdpType)
             }
         }
-        if let resultError = _ssdpExplorer.startExploring(forTypes: types).error {
+        if let resultError = _ssdpExplorer.initialize(forTypes: types).error {
             failed🔰()
             notifyDelegate(ofFailure: resultError as NSError)
         }
     }
     
     override func stop() {
-        _ssdpExplorer.stopExploring()
+        _ssdpExplorer.deinitialize()
         
         _serialSSDPDiscoveryQueue.async(execute: { () -> Void in
             self._ssdpDiscoveries.removeAll(keepingCapacity: false)
@@ -62,15 +62,8 @@ class SSDPExplorerDiscoveryAdapter: AbstractSSDPDiscoveryAdapter {
         super.stop()
     }
     
-    override func resendSearch() {
+    override func search() {
         _ssdpExplorer.searchRequest()
-//        _ssdpExplorer.stopExploring()
-//        _serialSSDPDiscoveryQueue.async(execute: { () -> Void in
-//            self.notifyDelegate(ofDiscoveries: Array(self._ssdpDiscoveries.values))
-//        })
-//
-//        super.stop()
-//        start()
     }
     
     override func failed🔰() {

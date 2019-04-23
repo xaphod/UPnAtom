@@ -102,8 +102,8 @@ class UPnPEventSubscriptionManager {
     fileprivate var _subscriptions = [String: Subscription]() /* [eventURLString: Subscription] */
     fileprivate let _concurrentSubscriptionQueue = DispatchQueue(label: "com.upnatom.upnp-event-subscription-manager.subscription-queue", attributes: DispatchQueue.Attributes.concurrent)
     /// Must be accessed within the subscription manager's concurrent queue
-    fileprivate var _httpServer: GCDWebServer! // TODO: Should ideally be a constant, non-optional, see Github issue #10
-    fileprivate let _httpServerPort: UInt = 52808
+    fileprivate var _httpServer: GCDWebServer!
+    fileprivate let _httpServerPort: UInt = 52808 // TODO: use a free port, don't hardcode
     fileprivate let _subscribeSessionManager = AFHTTPSessionManager()
     fileprivate let _renewSubscriptionSessionManager = AFHTTPSessionManager()
     fileprivate let _unsubscribeSessionManager = AFHTTPSessionManager()

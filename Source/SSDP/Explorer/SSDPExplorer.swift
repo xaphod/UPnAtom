@@ -46,14 +46,14 @@ class SSDPExplorer : NSObject {
     // private
     fileprivate static let _multicastGroupAddress = "239.255.255.250"
     fileprivate static let _multicastUDPPort: UInt16 = 1900
-    fileprivate var _multicastSocket: GCDAsyncUdpSocket? // TODO: Should ideally be a constant, see Github issue #10
-    fileprivate var _unicastSocket: GCDAsyncUdpSocket? // TODO: Should ideally be a constant, see Github issue #10
-    fileprivate var _types = [SSDPType]() // TODO: Should ideally be a Set<SSDPType>, see Github issue #13
+    fileprivate var _multicastSocket: GCDAsyncUdpSocket?
+    fileprivate var _unicastSocket: GCDAsyncUdpSocket?
+    fileprivate var _types = [SSDPType]()
     
-    func startExploring(forTypes types: [SSDPType], onInterface interface: String = "en0") -> EmptyResult {
+    func initialize(forTypes types: [SSDPType], onInterface interface: String = "en0") -> EmptyResult {
         
         if (_multicastSocket != nil || _unicastSocket != nil) {
-            stopExploring()
+            deinitialize()
             _multicastSocket = nil;
             _unicastSocket = nil;
         }
@@ -71,14 +71,14 @@ class SSDPExplorer : NSObject {
             try _unicastSocket?.enableReusePort(true)
             try _unicastSocket?.bind(toPort: 0, interface: interface)
         } catch {
-            stopExploring()
+            deinitialize()
             return .failure(createError("Could not bind socket to port"))
         }
         
         do {
             try _unicastSocket?.beginReceiving()
         } catch {
-            stopExploring()
+            deinitialize()
             return .failure(createError("Could not begin receiving error"))
         }
         
@@ -92,7 +92,7 @@ class SSDPExplorer : NSObject {
             do {
                 try _multicastSocket?.bind(toPort: SSDPExplorer._multicastUDPPort)
             } catch {
-                stopExploring()
+                deinitialize()
                 return .failure(createError("Could not bind socket to multicast port"))
             }
         }
@@ -102,19 +102,18 @@ class SSDPExplorer : NSObject {
         do {
             try _multicastSocket?.joinMulticastGroup(SSDPExplorer._multicastGroupAddress)
         } catch {
-            stopExploring()
+            deinitialize()
             return .failure(createError("Could not join multicast group"))
         }
         
         do {
             try _multicastSocket?.beginReceiving()
         } catch {
-            stopExploring()
+            deinitialize()
             return .failure(createError("Could not begin receiving error"))
         }
         
         _types = types
-        self.searchRequest()
         return .success
     }
     
@@ -135,7 +134,7 @@ class SSDPExplorer : NSObject {
         }
     }
     
-    func stopExploring() {
+    func deinitialize() {
         _multicastSocket?.close()
         _multicastSocket = nil
         _unicastSocket?.close()
@@ -188,14 +187,13 @@ class SSDPExplorer : NSObject {
 //                NSLog("SSDP messageType \(messageType) response headers: \(headers)")
             }
 
-//                LogVerbose("SSDP response headers: \(headers)")
-                let discovery = SSDPDiscovery(usn: usn, descriptionURL: locationURL, type: ssdpType)
-                switch messageType {
-                case .searchResponse, .availableNotification, .updateNotification:
-                    notifyDelegate(discovery, added: true)
-                case .unavailableNotification:
-                    notifyDelegate(discovery, added: false)
-                }
+            let discovery = SSDPDiscovery(usn: usn, descriptionURL: locationURL, type: ssdpType)
+            switch messageType {
+            case .searchResponse, .availableNotification, .updateNotification:
+                notifyDelegate(discovery, added: true)
+            case .unavailableNotification:
+                notifyDelegate(discovery, added: false)
+            }
         }
     }
 }
@@ -203,7 +201,7 @@ class SSDPExplorer : NSObject {
 extension SSDPExplorer: GCDAsyncUdpSocketDelegate {
     
     func udpSocket(_ sock: GCDAsyncUdpSocket, didNotSendDataWithTag tag: Int, dueToError error: Error?) {
-        stopExploring()
+        deinitialize()
         
         // this case should always have an error
         var retError: NSError? = nil

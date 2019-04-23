@@ -36,7 +36,7 @@ protocol SSDPDiscoveryAdapter: class {
     func start()
     func stop()
     func restart()
-    func resendSearch()
+    func search()
 
 }
 
@@ -71,7 +71,7 @@ class AbstractSSDPDiscoveryAdapter: SSDPDiscoveryAdapter {
         running = false
     }
     
-    func resendSearch() {
+    func search() {
     }
 }
 
