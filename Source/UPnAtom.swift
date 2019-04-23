@@ -26,6 +26,7 @@ import Foundation
 /// TODO: For now rooting to NSObject to expose to Objective-C, see Github issue #16
 @objcMembers public class UPnAtom: NSObject {
     // public
+    public static var delegateQueue = DispatchQueue.main // set before calling sharedInstance, must be serial
     public static let sharedInstance = UPnAtom()
     public let upnpRegistry: UPnPRegistry
     public var ssdpTypes: Set<String> {
@@ -39,7 +40,7 @@ import Foundation
     override init() {
         // configure discovery adapter
         let adapterClass = UPnAtom.ssdpDiscoveryAdapterClass()
-        let adapter = adapterClass.init()
+        let adapter = adapterClass.init(queue: UPnAtom.delegateQueue)
         ssdpDiscoveryAdapter = adapter
 
         // configure UPNP registry

@@ -44,7 +44,7 @@ import AFNetworking
     fileprivate let _concurrentUPnPObjectQueue = DispatchQueue(label: "com.upnatom.upnp-registry.upnp-object-queue", attributes: DispatchQueue.Attributes.concurrent)
     /// Must be accessed within dispatch_sync() or dispatch_async() and updated within dispatch_barrier_async() to the concurrent queue
     lazy fileprivate var _upnpObjects = [UniqueServiceName: AbstractUPnP]()
-    lazy fileprivate var _upnpObjectsMainThreadCopy = [UniqueServiceName: AbstractUPnP]() // main thread safe copy
+    lazy fileprivate var _upnpObjectsDelegateQueueCopy = [UniqueServiceName: AbstractUPnP]() // delegateQueue safe copy
     /// Must be accessed within dispatch_sync() or dispatch_async() and updated within dispatch_barrier_async() to the concurrent queue
     lazy fileprivate var _ssdpDiscoveryCache = [SSDPDiscovery]()
     fileprivate let _upnpObjectDescriptionSessionManager = AFHTTPSessionManager()
@@ -204,9 +204,9 @@ extension UPnPRegistry: SSDPDiscoveryAdapterDelegate {
     
     func ssdpDiscoveryAdapter(_ adapter: SSDPDiscoveryAdapter, didFailWithError error: NSError) {
         LogError("SSDP discovery did fail with error: \(error)")
-        DispatchQueue.main.async(execute: { () -> Void in
+        UPnAtom.delegateQueue.async {
             NotificationCenter.default.post(name: Notification.Name(rawValue: UPnPRegistry.UPnPDiscoveryErrorNotification()), object: self, userInfo: [UPnPRegistry.UPnPDiscoveryErrorKey(): error])
-        })
+        }
     }
     
     fileprivate func getUPnPDescription(forSSDPDiscovery ssdpDiscovery: SSDPDiscovery) {
@@ -248,11 +248,11 @@ extension UPnPRegistry: SSDPDiscoveryAdapterDelegate {
             
             upnpObjects[usn] = newObject
             
-            let upnpObjectsCopy = upnpObjects // create a copy for safe use on the main thread
+            let upnpObjectsCopy = upnpObjects // create a copy for safe use
             let notificationType: UPnPObjectNotificationType = newObject is AbstractUPnPDevice ? .device : .service
             let notificationComponents = notificationType.notificationComponents()
-            DispatchQueue.main.async(execute: { () -> Void in
-                self._upnpObjectsMainThreadCopy = upnpObjectsCopy
+            UPnAtom.delegateQueue.async(execute: { () -> Void in
+                self._upnpObjectsDelegateQueueCopy = upnpObjectsCopy
                 NotificationCenter.default.post(name: Notification.Name(rawValue: notificationComponents.objectAddedNotificationName), object: self, userInfo: [notificationComponents.objectKey: newObject])
             })
         }
@@ -269,8 +269,8 @@ extension UPnPRegistry: SSDPDiscoveryAdapterDelegate {
             let upnpObjectsCopy = upnpObjects // create a copy for safe use on the main thread
             let notificationType: UPnPObjectNotificationType = upnpObjectToRemove is AbstractUPnPDevice ? .device : .service
             let notificationComponents = notificationType.notificationComponents()
-            DispatchQueue.main.async(execute: { () -> Void in
-                self._upnpObjectsMainThreadCopy = upnpObjectsCopy
+            UPnAtom.delegateQueue.async(execute: { () -> Void in
+                self._upnpObjectsDelegateQueueCopy = upnpObjectsCopy
                 NotificationCenter.default.post(name: Notification.Name(rawValue: notificationComponents.objectRemoveNotificationName), object: self, userInfo: [notificationComponents.objectKey: upnpObjectToRemove])
             })
         }
@@ -279,12 +279,12 @@ extension UPnPRegistry: SSDPDiscoveryAdapterDelegate {
 
 extension UPnPRegistry: UPnPServiceSource {
     public func service(forUSN usn: UniqueServiceName) -> AbstractUPnPService? {
-        return _upnpObjectsMainThreadCopy[usn] as? AbstractUPnPService
+        return _upnpObjectsDelegateQueueCopy[usn] as? AbstractUPnPService
     }
 }
 
 extension UPnPRegistry: UPnPDeviceSource {
     public func device(forUSN usn: UniqueServiceName) -> AbstractUPnPDevice? {
-        return _upnpObjectsMainThreadCopy[usn] as? AbstractUPnPDevice
+        return _upnpObjectsDelegateQueueCopy[usn] as? AbstractUPnPDevice
     }
 }

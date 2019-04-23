@@ -44,10 +44,12 @@ protocol SSDPDiscoveryAdapter: class {
 class AbstractSSDPDiscoveryAdapter: SSDPDiscoveryAdapter {
     var rawSSDPTypes: Set<String> = []
     weak var delegate: SSDPDiscoveryAdapterDelegate?
-    var delegateQueue = DispatchQueue.main
+    var delegateQueue: DispatchQueue
     fileprivate(set) var running = false
     
-    required init() { }
+    required init(queue: DispatchQueue) {
+        self.delegateQueue = queue
+    }
     
     func start() {
         running = true
