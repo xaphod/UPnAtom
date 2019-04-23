@@ -66,6 +66,7 @@ class SSDPExplorerDiscoveryAdapter: AbstractSSDPDiscoveryAdapter {
     }
     
     override func failed🔰() {
+        NSLog("SSDPExplorerDiscoveryAdapter failed()")
         super.failed🔰()
         self.stop()
         

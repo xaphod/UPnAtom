@@ -466,7 +466,7 @@ class UPnPEventSubscriptionManager {
     fileprivate func startHTTPServer() -> Bool {
         let options: [String:Any] = [GCDWebServerOption_Port: _httpServerPort, GCDWebServerOption_AutomaticallySuspendInBackground:false]
         if let _ = try? _httpServer.start(options: options) {
-            NSLog("port \(_httpServer.port)")
+            // NSLog("port \(_httpServer.port)")
             return true
         } else {
             return false;
