@@ -61,24 +61,24 @@ import AFNetworking
     }
     
     /// Safe to call from any thread
-    public func upnpDevices(completionQueue: OperationQueue, completion: @escaping (_ upnpDevices: [AbstractUPnPDevice]) -> Void) {
+    public func upnpDevices(_ completion: @escaping (_ upnpDevices: [AbstractUPnPDevice]) -> Void) {
         upnpObjects { (upnpObjects: [UniqueServiceName: AbstractUPnP]) -> Void in
             let upnpDevices = Array(upnpObjects.values).filter({$0 is AbstractUPnPDevice})
             
-            completionQueue.addOperation({ () -> Void in
+            UPnAtom.delegateQueue.async {
                 completion(upnpDevices as! [AbstractUPnPDevice])
-            })
+            }
         }
     }
     
     /// Safe to call from any thread
-    public func upnpServices(completionQueue: OperationQueue, completion: @escaping (_ upnpServices: [AbstractUPnPService]) -> Void) {
+    public func upnpServices(_ completion: @escaping (_ upnpServices: [AbstractUPnPService]) -> Void) {
         upnpObjects { (upnpObjects: [UniqueServiceName: AbstractUPnP]) -> Void in
             let upnpServices = Array(upnpObjects.values).filter({$0 is AbstractUPnPService})
             
-            completionQueue.addOperation({ () -> Void in
+            UPnAtom.delegateQueue.async {
                 completion(upnpServices as! [AbstractUPnPService])
-            })
+            }
         }
     }
     
