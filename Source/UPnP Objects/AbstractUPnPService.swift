@@ -44,7 +44,7 @@ import AFNetworking
         if let baseURL = _baseURLFromXML {
             return baseURL
         }
-        return super.baseURL as URL!
+        return super.baseURL
     }
     public weak var deviceSource: UPnPDeviceSource?
     public var device: AbstractUPnPDevice? {

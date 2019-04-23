@@ -43,7 +43,7 @@ class UPnPEventSubscribeRequestSerializer: AFHTTPRequestSerializer {
         let mutableRequest: NSMutableURLRequest = (request as NSURLRequest).mutableCopy() as! NSMutableURLRequest
         
         for (field, value) in self.httpRequestHeaders {
-            if let field = field as? String, let value = value as? String, request.value(forHTTPHeaderField: field) == nil {
+            if request.value(forHTTPHeaderField: field) == nil {
                 mutableRequest.setValue(value, forHTTPHeaderField: field)
             }
         }
@@ -79,7 +79,7 @@ class UPnPEventSubscribeResponseSerializer: AFHTTPResponseSerializer {
         if let subscriptionID = (response as! HTTPURLResponse).allHeaderFields["SID"] as? String,
             let timeoutString = (response as! HTTPURLResponse).allHeaderFields["TIMEOUT"] as? String,
             let secondKeywordRange = timeoutString.range(of: "Second-"),
-            let timeout = Int(timeoutString.substring(with: (secondKeywordRange.upperBound ..< timeoutString.endIndex))) {
+            let timeout = Int(timeoutString[secondKeywordRange.upperBound...]) {
             return Response(subscriptionID: subscriptionID, timeout: timeout)
         } else {
             return nil
@@ -106,7 +106,7 @@ class UPnPEventRenewSubscriptionRequestSerializer: AFHTTPRequestSerializer {
         let mutableRequest: NSMutableURLRequest = (request as NSURLRequest).mutableCopy() as! NSMutableURLRequest
         
         for (field, value) in self.httpRequestHeaders {
-            if let field = field as? String, let value = value as? String, request.value(forHTTPHeaderField: field) == nil {
+            if request.value(forHTTPHeaderField: field) == nil {
                 mutableRequest.setValue(value, forHTTPHeaderField: field)
             }
         }

@@ -32,7 +32,7 @@ class RenderingControl1EventParser: AbstractDOMXMLParser {
         let result: EmptyResult = .success
         
         // procedural vs series of nested if let's
-        guard let lastChangeXMLString = document.firstChild(withXPath: "/e:propertyset/e:property/LastChange")?.stringValue() else {
+        guard let lastChangeXMLString = document.firstChild(withXPath: "/e:propertyset/e:property/LastChange")?.stringValue else {
             return .failure(createError("No LastChange element in UPnP service event XML"))
         }
         
@@ -44,9 +44,7 @@ class RenderingControl1EventParser: AbstractDOMXMLParser {
         
         lastChangeEventDocument.definePrefix("rcs", forDefaultNamespace: "urn:schemas-upnp-org:metadata-1-0/RCS/")
         lastChangeEventDocument.enumerateElements(withXPath: "/rcs:Event/rcs:InstanceID/*") { [unowned self] (element, index, bool) in
-            guard let element = element else{
-                return
-            }
+
             if let stateValue = element.value(forAttribute: "val") as? String, !stateValue.isEmpty {
                 if element.tag.range(of: "MetaData") != nil {
                     guard let metadataDocument = try? ONOXMLDocument(string: stateValue, encoding: String.Encoding.utf8.rawValue) else {
@@ -58,11 +56,8 @@ class RenderingControl1EventParser: AbstractDOMXMLParser {
                     var metaData = [String: String]()
                     
                     metadataDocument.definePrefix("didllite", forDefaultNamespace: "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/")
-                    metadataDocument.enumerateElements(withXPath: "/didllite:DIDL-Lite/didllite:item/*") { [unowned self] (metadataElement, index, bool) in
-                        guard let metadataElement = metadataElement else{
-                            return
-                        }
-                        if let elementStringValue = metadataElement.stringValue(), !elementStringValue.isEmpty {
+                    metadataDocument.enumerateElements(withXPath: "/didllite:DIDL-Lite/didllite:item/*") { (metadataElement, index, bool) in
+                        if let elementStringValue = metadataElement.stringValue, !elementStringValue.isEmpty {
                             metaData[metadataElement.tag] = elementStringValue
                         }
                     }

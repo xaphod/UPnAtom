@@ -28,8 +28,9 @@ struct SSDPDiscovery {
     let type: SSDPType
 }
 
-extension SSDPDiscovery: Equatable { }
-
-func ==(lhs: SSDPDiscovery, rhs: SSDPDiscovery) -> Bool {
-    return lhs.usn == rhs.usn
+extension SSDPDiscovery: Equatable {
+    static func == (lhs: SSDPDiscovery, rhs: SSDPDiscovery) -> Bool {
+        return lhs.usn == rhs.usn
+    }
 }
+

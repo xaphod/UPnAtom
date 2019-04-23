@@ -335,7 +335,7 @@ extension AbstractUPnP {
 extension ContentDirectory1Service {
 //    override public var className: String { return "\(type(of: self))" }
     override public var description: String {
-        var properties = PropertyPrinter()
+        let properties = PropertyPrinter()
 //        properties.add(super.className, property: super.description)
         return properties.description
     }
@@ -348,11 +348,8 @@ class ContentDirectoryBrowseResultParser: AbstractDOMXMLParser {
         let result: EmptyResult = .success
         document.definePrefix("didllite", forDefaultNamespace: "urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/")
         document.enumerateElements(withXPath: "/didllite:DIDL-Lite/*") { [unowned self] (element, index, bool) in
-            guard let element = element else{
-                return
-            }
             NSLog("element \(element)")
-            switch element.firstChild(withTag: "class").stringValue() {
+            switch element.firstChild(withTag: "class")?.stringValue {
             case .some(let rawType) where rawType.range(of: "object.container") != nil: // some servers use object.container and some use object.container.storageFolder
                 if let contentDirectoryObject = ContentDirectory1Container(xmlElement: element) {
                     self._contentDirectoryObjects.append(contentDirectoryObject)

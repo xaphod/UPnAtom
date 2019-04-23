@@ -87,24 +87,24 @@ extension SSDPType: CustomStringConvertible {
 }
 
 extension SSDPType: Hashable {
-    var hashValue: Int {
-        return self.rawValue.hashValue
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.rawValue)
     }
-}
-
-func ==(lhs: SSDPType, rhs: SSDPType) -> Bool {
-    switch (lhs, rhs) {
-    case (.All, .All):
-        return true
-    case (.RootDevice, .RootDevice):
-        return true
-    case (.UUID(let lhsRawValue), .UUID(let rhsRawValue)):
-        return lhsRawValue == rhsRawValue
-    case (.Device(let lhsRawValue), .Device(let rhsRawValue)):
-        return lhsRawValue == rhsRawValue
-    case (.Service(let lhsRawValue), .Service(let rhsRawValue)):
-        return lhsRawValue == rhsRawValue
-    default:
-        return false
+    
+    static func ==(lhs: SSDPType, rhs: SSDPType) -> Bool {
+        switch (lhs, rhs) {
+        case (.All, .All):
+            return true
+        case (.RootDevice, .RootDevice):
+            return true
+        case (.UUID(let lhsRawValue), .UUID(let rhsRawValue)):
+            return lhsRawValue == rhsRawValue
+        case (.Device(let lhsRawValue), .Device(let rhsRawValue)):
+            return lhsRawValue == rhsRawValue
+        case (.Service(let lhsRawValue), .Service(let rhsRawValue)):
+            return lhsRawValue == rhsRawValue
+        default:
+            return false
+        }
     }
 }

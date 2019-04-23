@@ -37,14 +37,14 @@ import Ono
     init?(xmlElement: ONOXMLElement) {
         if let objectID = xmlElement.value(forAttribute: "id") as? String,
             let parentID = xmlElement.value(forAttribute: "parentID") as? String,
-            let title = xmlElement.firstChild(withTag: "title").stringValue(),
-            let rawType = xmlElement.firstChild(withTag: "class").stringValue() {
+            let title = xmlElement.firstChild(withTag: "title")?.stringValue,
+            let rawType = xmlElement.firstChild(withTag: "class")?.stringValue {
                 self.objectID = objectID
                 self.parentID = parentID
                 self.title = title
                 self.rawType = rawType
                 
-                if let albumArtURLString = xmlElement.firstChild(withTag: "albumArtURI")?.stringValue() {
+                if let albumArtURLString = xmlElement.firstChild(withTag: "albumArtURI")?.stringValue {
                     self.albumArtURL = URL(string: albumArtURLString)
                 } else { albumArtURL = nil }
         } else {
@@ -116,7 +116,7 @@ extension ContentDirectory1Container {
     
     override init?(xmlElement: ONOXMLElement) {
         /// TODO: Return nil immediately instead of waiting, see Github issue #11
-        if let resourceURLString = xmlElement.firstChild(withTag: "res").stringValue() {
+        if let resourceURLString = xmlElement.firstChild(withTag: "res")?.stringValue {
             resourceURL = URL(string: resourceURLString)
         } else { resourceURL = nil }
         
@@ -158,9 +158,9 @@ extension ContentDirectory1Item {
     public let size: Int?
     
     override init?(xmlElement: ONOXMLElement) {
-        bitrate = Int(String(describing: xmlElement.firstChild(withTag: "res").value(forAttribute: "bitrate")))
+        bitrate = Int(String(describing: xmlElement.firstChild(withTag: "res")?.value(forAttribute: "bitrate")))
         
-        if let durationString = xmlElement.firstChild(withTag: "res").value(forAttribute: "duration") as? String {
+        if let durationString = xmlElement.firstChild(withTag: "res")?.value(forAttribute: "duration") as? String {
             let durationComponents = durationString.components(separatedBy: ":")
             var count: Double = 0
             var duration: Double = 0
@@ -172,19 +172,19 @@ extension ContentDirectory1Item {
             self.duration = TimeInterval(duration)
         } else { self.duration = nil }
         
-        audioChannelCount = Int(String(describing: xmlElement.firstChild(withTag: "res").value(forAttribute: "nrAudioChannels")))
+        audioChannelCount = Int(String(describing: xmlElement.firstChild(withTag: "res")?.value(forAttribute: "nrAudioChannels")))
         
-        protocolInfo = xmlElement.firstChild(withTag: "res").value(forAttribute: "protocolInfo") as? String
+        protocolInfo = xmlElement.firstChild(withTag: "res")?.value(forAttribute: "protocolInfo") as? String
         
-        if let resolutionComponents = (xmlElement.firstChild(withTag: "res").value(forAttribute: "resolution") as? String)?.components(separatedBy: "x"),
+        if let resolutionComponents = (xmlElement.firstChild(withTag: "res")?.value(forAttribute: "resolution") as? String)?.components(separatedBy: "x"),
             let width = Int(String(describing: resolutionComponents.first)),
             let height = Int(String(describing: resolutionComponents.last)) {
                 resolution = CGSize(width: width, height: height)
         } else { resolution = nil }
         
-        sampleFrequency = Int(String(describing: xmlElement.firstChild(withTag: "res").value(forAttribute: "sampleFrequency")))
+        sampleFrequency = Int(String(describing: xmlElement.firstChild(withTag: "res")?.value(forAttribute: "sampleFrequency")))
         
-        size = Int(String(describing: xmlElement.firstChild(withTag: "res").value(forAttribute: "size")))
+        size = Int(String(describing: xmlElement.firstChild(withTag: "res")?.value(forAttribute: "size")))
         
         super.init(xmlElement: xmlElement)
     }
@@ -199,10 +199,8 @@ extension ContentDirectory1Object {
 
 /// overrides ExtendedPrintable protocol implementation
 extension ContentDirectory1VideoItem {
-//    override public var className: String { return "\(type(of: self))" }
     override public var description: String {
         var properties = PropertyPrinter()
-//        properties.add(super.className, property: super.description)
         properties.add("bitrate", property: "\(String(describing: bitrate))")
         properties.add("duration", property: "\(String(describing: duration))")
         properties.add("audioChannelCount", property: "\(String(describing: audioChannelCount))")
@@ -220,7 +218,7 @@ extension ContentDirectory1VideoItem {
     public let protocolInfo: String?
     
     override init?(xmlElement: ONOXMLElement) {
-        if let durationString = xmlElement.firstChild(withTag: "res").value(forAttribute: "duration") as? String {
+        if let durationString = xmlElement.firstChild(withTag: "res")?.value(forAttribute: "duration") as? String {
             let durationComponents = durationString.components(separatedBy: ":")
             var count: Double = 0
             var duration: Double = 0
@@ -232,7 +230,7 @@ extension ContentDirectory1VideoItem {
             self.duration = TimeInterval(duration)
         } else { self.duration = nil }
         
-        protocolInfo = xmlElement.firstChild(withTag: "res").value(forAttribute: "protocolInfo") as? String
+        protocolInfo = xmlElement.firstChild(withTag: "res")?.value(forAttribute: "protocolInfo") as? String
         super.init(xmlElement: xmlElement)
     }
 }

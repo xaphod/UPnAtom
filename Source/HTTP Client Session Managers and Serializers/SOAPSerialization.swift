@@ -49,7 +49,7 @@ import Ono
         let mutableRequest: NSMutableURLRequest = (request as NSURLRequest).mutableCopy() as! NSMutableURLRequest
         
         for (field, value) in self.httpRequestHeaders {
-            if let field = field as? String, let value = value as? String, request.value(forHTTPHeaderField: field) == nil {
+            if request.value(forHTTPHeaderField: field) == nil {
                 mutableRequest.setValue(value, forHTTPHeaderField: field)
             }
         }
@@ -118,9 +118,9 @@ class SOAPResponseParser: AbstractDOMXMLParser {
     override func parse(document: ONOXMLDocument) -> EmptyResult {
         var result: EmptyResult = .success
         document.enumerateElements(withXPath: "/s:Envelope/s:Body/*/*") { [unowned self] (element, index, bool) in
-            if let element = element , let elementTag = element.tag, let elementValue = element.stringValue(),
-                elementTag.characters.count > 0 && elementValue.characters.count > 0 && elementValue != "NOT_IMPLEMENTED" {
-                self._responseParameters[elementTag] = elementValue
+            if let elementValue = element.stringValue,
+                element.tag.count > 0 && elementValue.count > 0 && elementValue != "NOT_IMPLEMENTED" {
+                self._responseParameters[element.tag] = elementValue
             }
 
             result = .success

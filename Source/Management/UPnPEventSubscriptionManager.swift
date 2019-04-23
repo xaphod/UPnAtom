@@ -31,8 +31,13 @@ protocol UPnPEventSubscriber: class {
 }
 
 class UPnPEventSubscriptionManager {
+    
     // Subclasses NSObject in order to filter collections of this class using NSPredicate
     class Subscription: NSObject {
+        static func == (lhs: UPnPEventSubscriptionManager.Subscription, rhs: UPnPEventSubscriptionManager.Subscription) -> Bool {
+            return lhs.subscriptionID == rhs.subscriptionID
+        }
+        
         fileprivate(set) var subscriptionID: String
         fileprivate(set) var expiration: Date
         weak var subscriber: UPnPEventSubscriber?
@@ -127,15 +132,13 @@ class UPnPEventSubscriptionManager {
                 
                 GCDWebServer.setLogLevel(Int32(3))
                 
-                self._httpServer.addHandler(forMethod: "NOTIFY", path: self._eventCallBackPath, request: GCDWebServerDataRequest.self) { (request: GCDWebServerRequest!) -> GCDWebServerResponse! in
+                self._httpServer.addHandler(forMethod: "NOTIFY", path: self._eventCallBackPath, request: GCDWebServerDataRequest.self) { (request: GCDWebServerRequest!) -> GCDWebServerResponse in
                     
                     if let dataRequest = request as? GCDWebServerDataRequest,
-                        let headers = dataRequest.headers as? [String: AnyObject],
-                        let sid = headers["SID"] as? String {
+                        let sid = dataRequest.headers["SID"] {
                         let data = dataRequest.data
-                        LogVerbose("NOTIFY request: Final body with size: \(data.count)\nAll headers: \(headers)")
+                        LogVerbose("NOTIFY request: Final body with size: \(data.count)\nAll headers: \(dataRequest.headers)")
                         self.handleIncomingEvent(subscriptionID: sid, eventData: data)
-                        
                     }
                     
                     return GCDWebServerResponse()
@@ -461,7 +464,7 @@ class UPnPEventSubscriptionManager {
     }
     
     fileprivate func startHTTPServer() -> Bool {
-        let options = [GCDWebServerOption_Port: _httpServerPort, GCDWebServerOption_AutomaticallySuspendInBackground:UInt(false)]
+        let options: [String:Any] = [GCDWebServerOption_Port: _httpServerPort, GCDWebServerOption_AutomaticallySuspendInBackground:false]
         if let _ = try? _httpServer.start(options: options) {
             NSLog("port \(_httpServer.port)")
             return true
@@ -471,17 +474,13 @@ class UPnPEventSubscriptionManager {
     }
     
     fileprivate func stopHTTPServer() -> Bool {
-        if _httpServer.safeToStop {
+        if _httpServer.isRunning {
             _httpServer.stop()
             return true
         }
         
         return false
     }
-}
-
-internal func ==(lhs: UPnPEventSubscriptionManager.Subscription, rhs: UPnPEventSubscriptionManager.Subscription) -> Bool {
-    return lhs.subscriptionID == rhs.subscriptionID
 }
 
 extension UPnPEventSubscriptionManager.Subscription: ExtendedPrintable {
@@ -515,7 +514,7 @@ extension AFHTTPSessionManager {
     fileprivate func dataTask(_ method: String, URLString: String, parameters: AnyObject, success: ((_ task: URLSessionDataTask, _ responseObject: AnyObject?) -> Void)?, failure: ((_ task: URLSessionDataTask?, _ error: NSError) -> Void)?) -> URLSessionDataTask? {
         let request: URLRequest!
         var serializationError: NSError?
-        request = self.requestSerializer.request(withMethod: method, urlString: URL(string: URLString, relativeTo: self.baseURL)!.absoluteString, parameters: parameters, error: &serializationError) as URLRequest!
+        request = self.requestSerializer.request(withMethod: method, urlString: URL(string: URLString, relativeTo: self.baseURL)!.absoluteString, parameters: parameters, error: &serializationError) as URLRequest
         
         if let serializationError = serializationError {
             if let failure = failure {
@@ -548,11 +547,6 @@ extension GCDWebServer {
     var safeToStart: Bool {
         // prevents a crash where although the http server reports running is false, attempting to start while GCDWebServer->_source4 is not null causes abort() to be called which kills the app. GCDWebServer.serverURL == nil is equivalent to GCDWebServer->_source4 == NULL.
         return !isRunning && serverURL == nil
-    }
-    
-    var safeToStop: Bool {
-        // prevents a crash where http server must actually be running to stop it or abort() is called which kills the app.
-        return isRunning
     }
 }
 

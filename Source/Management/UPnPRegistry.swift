@@ -214,7 +214,7 @@ extension UPnPRegistry: SSDPDiscoveryAdapterDelegate {
             self._concurrentUPnPObjectQueue.async(flags: .barrier, execute: { () -> Void in
                 if let xmlData = responseObject as? Data {
                     // if ssdp object is not in cache then discard
-                    guard self._ssdpDiscoveryCache.index(of: ssdpDiscovery) != nil else {
+                    guard self._ssdpDiscoveryCache.firstIndex(of: ssdpDiscovery) != nil else {
                         return
                     }
                     
@@ -222,7 +222,7 @@ extension UPnPRegistry: SSDPDiscoveryAdapterDelegate {
                 }
             })
             }, failure: { (task: URLSessionDataTask?, error: Error!) -> Void in
-                LogError("Unable to fetch UPnP object description for SSDP object: \(ssdpDiscovery.usn.description) at \(ssdpDiscovery.descriptionURL): \(error)")
+                LogError("Unable to fetch UPnP object description for SSDP object: \(ssdpDiscovery.usn.description) at \(ssdpDiscovery.descriptionURL): \(String(describing: error))")
         })
     }
     

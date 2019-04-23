@@ -33,7 +33,7 @@ protocol SSDPExplorerDelegate: class {
     func ssdpExplorer(_ explorer: SSDPExplorer, didFailWithError error: NSError)
 }
 
-class SSDPExplorer {
+class SSDPExplorer : NSObject {
     enum SSDPMessageType {
         case searchResponse
         case availableNotification
@@ -60,27 +60,23 @@ class SSDPExplorer {
         assert(_multicastSocket == nil, "Socket is already open, stop it first!")
         
         // create sockets
-        guard let multicastSocket: GCDAsyncUdpSocket? = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main),
-            let unicastSocket: GCDAsyncUdpSocket? = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main) else {
-                return .failure(createError("Socket could not be created"))
-        }
-        _multicastSocket = multicastSocket
-        _unicastSocket = unicastSocket
-        multicastSocket?.setIPv6Enabled(false)
-        unicastSocket?.setIPv6Enabled(false)
+        _multicastSocket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main)
+        _multicastSocket?.setIPv6Enabled(false)
+        _unicastSocket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main)
+        _unicastSocket?.setIPv6Enabled(false)
         
         // Configure unicast socket
         // Bind to address on the specified interface to a random port to receive unicast datagrams
         do {
-            try unicastSocket?.enableReusePort(true)
-            try unicastSocket?.bind(toPort: 0, interface: interface)
+            try _unicastSocket?.enableReusePort(true)
+            try _unicastSocket?.bind(toPort: 0, interface: interface)
         } catch {
             stopExploring()
             return .failure(createError("Could not bind socket to port"))
         }
         
         do {
-            try unicastSocket?.beginReceiving()
+            try _unicastSocket?.beginReceiving()
         } catch {
             stopExploring()
             return .failure(createError("Could not begin receiving error"))
@@ -90,11 +86,11 @@ class SSDPExplorer {
         // Bind to port without defining the interface to bind to the address INADDR_ANY (0.0.0.0). This prevents any address filtering which allows datagrams sent to the multicast group to be receives
         
         do {
-            try multicastSocket?.enableReusePort(true)
-            try multicastSocket?.bind(toPort: SSDPExplorer._multicastUDPPort)
+            try _multicastSocket?.enableReusePort(true)
+            try _multicastSocket?.bind(toPort: SSDPExplorer._multicastUDPPort)
         } catch {
             do {
-                try multicastSocket?.bind(toPort: SSDPExplorer._multicastUDPPort)
+                try _multicastSocket?.bind(toPort: SSDPExplorer._multicastUDPPort)
             } catch {
                 stopExploring()
                 return .failure(createError("Could not bind socket to multicast port"))
@@ -104,14 +100,14 @@ class SSDPExplorer {
         
         // Join multicast group to express interest to router of receiving multicast datagrams
         do {
-            try multicastSocket?.joinMulticastGroup(SSDPExplorer._multicastGroupAddress)
+            try _multicastSocket?.joinMulticastGroup(SSDPExplorer._multicastGroupAddress)
         } catch {
             stopExploring()
             return .failure(createError("Could not join multicast group"))
         }
         
         do {
-            try multicastSocket?.beginReceiving()
+            try _multicastSocket?.beginReceiving()
         } catch {
             stopExploring()
             return .failure(createError("Could not begin receiving error"))
@@ -186,7 +182,7 @@ class SSDPExplorer {
             /// NT = Notification Type - SSDP discovered from device advertisements
             /// ST = Search Target - SSDP discovered as a result of using M-SEARCH requests
             let ssdpTypeRawValue = (headers["st"] != nil ? headers["st"] : headers["nt"]),
-            let ssdpType = SSDPType(rawValue: ssdpTypeRawValue), _types.index(of: ssdpType) != nil {
+            let ssdpType = SSDPType(rawValue: ssdpTypeRawValue), _types.firstIndex(of: ssdpType) != nil {
             
             if ssdpTypeRawValue.contains("MediaRenderer:1") {
 //                NSLog("SSDP messageType \(messageType) response headers: \(headers)")
@@ -205,7 +201,8 @@ class SSDPExplorer {
 }
 
 extension SSDPExplorer: GCDAsyncUdpSocketDelegate {
-    @objc func udpSocket(_ sock: GCDAsyncUdpSocket!, didNotSendDataWithTag tag: Int, dueToError error: Error!) {
+    
+    func udpSocket(_ sock: GCDAsyncUdpSocket, didNotSendDataWithTag tag: Int, dueToError error: Error?) {
         stopExploring()
         
         // this case should always have an error
@@ -222,13 +219,13 @@ extension SSDPExplorer: GCDAsyncUdpSocketDelegate {
         }
     }
     
-    @objc func udpSocketDidClose(_ sock: GCDAsyncUdpSocket!, withError error: Error!) {
+    func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?) {
         if let error = error {
             notifyDelegate(ofFailure: error as NSError)
         }
     }
     
-    @objc func udpSocket(_ sock: GCDAsyncUdpSocket!, didReceive data: Data!, fromAddress address: Data!, withFilterContext filterContext: Any!) {
+    func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
         if let message = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String? {
 //            print({ () -> String in
 //                let socketType = (sock === self._unicastSocket) ? "UNICAST" : "MULTICAST"
@@ -242,7 +239,7 @@ extension SSDPExplorer: GCDAsyncUdpSocketDelegate {
                 if httpMethodLine == nil {
                     httpMethodLine = line
                 } else {
-                    headersRegularExpression?.enumerateMatches(in: line, options: [], range: NSRange(location: 0, length: line.characters.count), using: { (resultOptional: NSTextCheckingResult?, flags: NSRegularExpression.MatchingFlags, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+                    headersRegularExpression?.enumerateMatches(in: line, options: [], range: NSRange(location: 0, length: line.count), using: { (resultOptional: NSTextCheckingResult?, flags: NSRegularExpression.MatchingFlags, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
                         if let result = resultOptional, result.numberOfRanges == 3 {
                             let key = (line as NSString).substring(with: result.range(at: 1)).lowercased()
                             let value = (line as NSString).substring(with: result.range(at: 2))

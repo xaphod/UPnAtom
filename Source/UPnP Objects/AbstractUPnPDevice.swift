@@ -64,7 +64,7 @@ import CoreGraphics
         if let baseURL = _baseURLFromXML {
             return baseURL
         }
-        return super.baseURL as URL!
+        return super.baseURL
     }
     
     // private
